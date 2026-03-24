@@ -7,6 +7,8 @@ import { TenantInfoCard } from './stories/TenantInfoCard'
 import { MultiUnitBanner } from './stories/MultiUnitBanner'
 import { CommunicationsPanel } from './stories/CommunicationsPanel'
 import { UnitDetailsCard } from './stories/UnitDetailsCard'
+import { Navbar, Sidebar } from './stories/AppNav'
+import type { NavId } from './stories/AppNav'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -109,105 +111,6 @@ const TENANTS: TenantRecord[] = [
   },
 ]
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
-
-function Sidebar({ activeNav, onNav }: { activeNav: string; onNav: (v: string) => void }) {
-  const navItems = [
-    { id: 'tenants', label: 'Tenants', icon: '👥' },
-    { id: 'units', label: 'Units', icon: '🏠' },
-    { id: 'payments', label: 'Payments', icon: '💳' },
-    { id: 'maintenance', label: 'Maintenance', icon: '🔧' },
-    { id: 'reports', label: 'Reports', icon: '📊' },
-  ]
-
-  return (
-    <aside style={{
-      width: 220,
-      minHeight: '100vh',
-      background: 'white',
-      borderRight: '1px solid var(--ds-color-border)',
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-    }}>
-      {/* Logo */}
-      <div style={{
-        padding: '20px 20px 16px',
-        borderBottom: '1px solid var(--ds-color-border)',
-      }}>
-        <div style={{
-          fontSize: 16,
-          fontWeight: 700,
-          color: 'var(--ds-color-primary)',
-          letterSpacing: '-0.3px',
-        }}>
-          StorageOS
-        </div>
-        <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>
-          Sunrise Self Storage
-        </div>
-      </div>
-
-      {/* Nav */}
-      <nav style={{ padding: '12px 8px', flex: 1 }}>
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => onNav(item.id)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              width: '100%',
-              padding: '9px 12px',
-              borderRadius: 'var(--ds-border-radius-md)',
-              border: 'none',
-              background: activeNav === item.id ? 'var(--ds-color-primary-light)' : 'transparent',
-              color: activeNav === item.id ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
-              fontSize: 14,
-              fontWeight: activeNav === item.id ? 600 : 400,
-              cursor: 'pointer',
-              textAlign: 'left',
-              marginBottom: 2,
-            }}
-          >
-            <span style={{ fontSize: 16 }}>{item.icon}</span>
-            {item.label}
-          </button>
-        ))}
-      </nav>
-
-      {/* User */}
-      <div style={{
-        padding: '12px 16px',
-        borderTop: '1px solid var(--ds-color-border)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-      }}>
-        <div style={{
-          width: 32,
-          height: 32,
-          borderRadius: '50%',
-          background: 'var(--ds-color-primary)',
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 13,
-          fontWeight: 600,
-          flexShrink: 0,
-        }}>
-          DY
-        </div>
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ds-color-text-primary)' }}>Dave Yoon</div>
-          <div style={{ fontSize: 11, color: 'var(--ds-color-text-muted)' }}>Manager</div>
-        </div>
-      </div>
-    </aside>
-  )
-}
 
 // ─── Stats bar ────────────────────────────────────────────────────────────────
 
@@ -518,33 +421,39 @@ function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void 
 // ─── App shell ────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [nav, setNav] = useState('tenants')
+  const [nav, setNav] = useState<NavId>('tenants')
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null)
 
   const selectedTenant = TENANTS.find(t => t.id === selectedTenantId)
 
-  if (selectedTenant) {
-    return (
-      <div style={{ display: 'flex', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
-        <Sidebar activeNav="tenants" onNav={(v) => { setNav(v); setSelectedTenantId(null) }} />
-        <main style={{ flex: 1, minWidth: 0, minHeight: '100vh' }}>
-          <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
-        </main>
-      </div>
-    )
+  const handleNav = (id: NavId) => {
+    setNav(id)
+    setSelectedTenantId(null)
   }
 
   return (
-    <div style={{ display: 'flex', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <Sidebar activeNav={nav} onNav={setNav} />
-      <main style={{ flex: 1, minWidth: 0, padding: '32px', background: 'var(--ds-color-surface-subtle)', minHeight: '100vh' }}>
-        {nav === 'tenants' && <TenantsView onSelectTenant={setSelectedTenantId} />}
-        {nav !== 'tenants' && (
-          <div style={{ color: 'var(--ds-color-text-muted)', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
-            Select <strong>Tenants</strong> from the sidebar to see the demo
-          </div>
-        )}
-      </main>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* Top navbar */}
+      <Navbar facilityName="Sunrise Self Storage" userName="DY" tasksCount={24} />
+
+      {/* Below navbar: sidebar + content */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+        <Sidebar activeNav={nav} onNav={handleNav} userName="Dave Yoon" userEmail="dave@monumentai.com" />
+
+        <main style={{ flex: 1, minWidth: 0, background: 'var(--ds-color-surface-subtle)', overflowY: 'auto' }}>
+          {selectedTenant ? (
+            <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
+          ) : nav === 'tenants' ? (
+            <div style={{ padding: '32px' }}>
+              <TenantsView onSelectTenant={setSelectedTenantId} />
+            </div>
+          ) : (
+            <div style={{ color: 'var(--ds-color-text-muted)', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
+              Select <strong>Tenants</strong> from the sidebar to see the demo
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
