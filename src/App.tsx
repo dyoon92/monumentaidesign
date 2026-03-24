@@ -1,0 +1,534 @@
+import { useState } from 'react'
+import '../src/tokens/variables.css'
+import { TenantOverviewPage } from './stories/prototypes/TenantOverviewPage'
+import { TenantsTable } from './stories/TenantsTable'
+import { TenantPageHeader } from './stories/TenantPageHeader'
+import { PaymentBanner } from './stories/PaymentBanner'
+import { TenantInfoCard } from './stories/TenantInfoCard'
+import { MultiUnitBanner } from './stories/MultiUnitBanner'
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type View = 'tenants' | 'tenant-detail' | 'renewal'
+type ActiveTab = 'overview' | 'billing' | 'documents' | 'access' | 'renewal'
+
+interface TenantRecord {
+  id: string
+  name: string
+  email: string
+  phone: string
+  unit: string
+  balance: string
+  balanceOverdue: boolean
+  paymentStatus: 'balance-due' | 'good-standing' | 'move-out' | 'updated'
+  unitStatus: 'overdue' | 'normal' | 'move-out'
+  moveInDate: string
+  leaseEnd: string
+  autopay: boolean
+  cardBrand?: string
+  cardLast4?: string
+}
+
+// ─── Sample data ──────────────────────────────────────────────────────────────
+
+const TENANTS: TenantRecord[] = [
+  {
+    id: '1',
+    name: 'Stephanie Anderson',
+    email: 's.anderson@email.com',
+    phone: '(555) 248-1190',
+    unit: '147',
+    balance: '$345.00',
+    balanceOverdue: true,
+    paymentStatus: 'balance-due',
+    unitStatus: 'overdue',
+    moveInDate: 'Apr 29, 2023',
+    leaseEnd: 'Jun 30, 2025',
+    autopay: false,
+  },
+  {
+    id: '2',
+    name: 'John Smith',
+    email: 'j.smith@email.com',
+    phone: '(555) 391-2047',
+    unit: '052',
+    balance: '$0.00',
+    balanceOverdue: false,
+    paymentStatus: 'good-standing',
+    unitStatus: 'normal',
+    moveInDate: 'Jan 15, 2023',
+    leaseEnd: 'Jan 14, 2026',
+    autopay: true,
+    cardBrand: 'Visa',
+    cardLast4: '4242',
+  },
+  {
+    id: '3',
+    name: 'Sarah Johnson',
+    email: 's.johnson@email.com',
+    phone: '(555) 774-3301',
+    unit: '281',
+    balance: '$132.00',
+    balanceOverdue: true,
+    paymentStatus: 'move-out',
+    unitStatus: 'move-out',
+    moveInDate: 'Mar 1, 2022',
+    leaseEnd: 'Apr 30, 2025',
+    autopay: false,
+  },
+  {
+    id: '4',
+    name: 'Michael Brown',
+    email: 'm.brown@email.com',
+    phone: '(555) 509-8812',
+    unit: '021',
+    balance: '$89.00',
+    balanceOverdue: true,
+    paymentStatus: 'balance-due',
+    unitStatus: 'overdue',
+    moveInDate: 'Jun 10, 2024',
+    leaseEnd: 'Jun 9, 2025',
+    autopay: false,
+  },
+  {
+    id: '5',
+    name: 'Emily Davis',
+    email: 'e.davis@email.com',
+    phone: '(555) 122-6630',
+    unit: '319',
+    balance: '$0.00',
+    balanceOverdue: false,
+    paymentStatus: 'good-standing',
+    unitStatus: 'normal',
+    moveInDate: 'Aug 22, 2023',
+    leaseEnd: 'Aug 21, 2025',
+    autopay: true,
+    cardBrand: 'Mastercard',
+    cardLast4: '8731',
+  },
+]
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+
+function Sidebar({ activeNav, onNav }: { activeNav: string; onNav: (v: string) => void }) {
+  const navItems = [
+    { id: 'tenants', label: 'Tenants', icon: '👥' },
+    { id: 'units', label: 'Units', icon: '🏠' },
+    { id: 'payments', label: 'Payments', icon: '💳' },
+    { id: 'maintenance', label: 'Maintenance', icon: '🔧' },
+    { id: 'reports', label: 'Reports', icon: '📊' },
+  ]
+
+  return (
+    <aside style={{
+      width: 220,
+      minHeight: '100vh',
+      background: 'white',
+      borderRight: '1px solid var(--ds-color-border)',
+      display: 'flex',
+      flexDirection: 'column',
+      flexShrink: 0,
+    }}>
+      {/* Logo */}
+      <div style={{
+        padding: '20px 20px 16px',
+        borderBottom: '1px solid var(--ds-color-border)',
+      }}>
+        <div style={{
+          fontSize: 16,
+          fontWeight: 700,
+          color: 'var(--ds-color-primary)',
+          letterSpacing: '-0.3px',
+        }}>
+          StorageOS
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>
+          Sunrise Self Storage
+        </div>
+      </div>
+
+      {/* Nav */}
+      <nav style={{ padding: '12px 8px', flex: 1 }}>
+        {navItems.map(item => (
+          <button
+            key={item.id}
+            onClick={() => onNav(item.id)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              width: '100%',
+              padding: '9px 12px',
+              borderRadius: 'var(--ds-border-radius-md)',
+              border: 'none',
+              background: activeNav === item.id ? 'var(--ds-color-primary-light)' : 'transparent',
+              color: activeNav === item.id ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
+              fontSize: 14,
+              fontWeight: activeNav === item.id ? 600 : 400,
+              cursor: 'pointer',
+              textAlign: 'left',
+              marginBottom: 2,
+            }}
+          >
+            <span style={{ fontSize: 16 }}>{item.icon}</span>
+            {item.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* User */}
+      <div style={{
+        padding: '12px 16px',
+        borderTop: '1px solid var(--ds-color-border)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+      }}>
+        <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          background: 'var(--ds-color-primary)',
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 13,
+          fontWeight: 600,
+          flexShrink: 0,
+        }}>
+          DY
+        </div>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ds-color-text-primary)' }}>Dave Yoon</div>
+          <div style={{ fontSize: 11, color: 'var(--ds-color-text-muted)' }}>Manager</div>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
+// ─── Stats bar ────────────────────────────────────────────────────────────────
+
+function StatsBar() {
+  const stats = [
+    { label: 'Total Tenants', value: '5', sub: '4 active units' },
+    { label: 'Overdue Balance', value: '$566', sub: '3 tenants', color: 'var(--ds-color-error)' },
+    { label: 'Autopay Enrolled', value: '2', sub: '40% of tenants', color: 'var(--ds-color-success)' },
+    { label: 'Move-Outs This Month', value: '1', sub: 'Unit 281', color: 'var(--ds-color-warning)' },
+  ]
+
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 16,
+      marginBottom: 24,
+    }}>
+      {stats.map(stat => (
+        <div key={stat.label} style={{
+          background: 'white',
+          border: '1px solid var(--ds-color-border)',
+          borderRadius: 'var(--ds-border-radius-lg)',
+          padding: '16px 20px',
+        }}>
+          <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginBottom: 6 }}>{stat.label}</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: stat.color || 'var(--ds-color-text-primary)', lineHeight: 1 }}>{stat.value}</div>
+          <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 4 }}>{stat.sub}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Renewal tab ──────────────────────────────────────────────────────────────
+
+function RenewalTab({ tenant }: { tenant: TenantRecord }) {
+  const [decision, setDecision] = useState<'accepted' | 'declined' | null>(null)
+
+  if (decision === 'accepted') {
+    return (
+      <div style={{ margin: '24px 0', padding: '32px', background: 'var(--ds-color-success-light)', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-success)', textAlign: 'center' }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>✓</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ds-color-success)' }}>Lease renewal accepted</div>
+        <div style={{ fontSize: 14, color: 'var(--ds-color-text-muted)', marginTop: 6 }}>
+          New lease begins Jul 1, 2025 · $1,520 / mo · 12-month term
+        </div>
+      </div>
+    )
+  }
+
+  if (decision === 'declined') {
+    return (
+      <div style={{ margin: '24px 0', padding: '32px', background: 'var(--ds-color-error-subtle)', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-error)', textAlign: 'center' }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>✕</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ds-color-error)' }}>Renewal declined</div>
+        <div style={{ fontSize: 14, color: 'var(--ds-color-text-muted)', marginTop: 6 }}>
+          Move-out date: Jun 30, 2025 · Notice sent to {tenant.name.split(' ')[0]}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ margin: '24px 0' }}>
+      <div style={{ background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--ds-color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ds-color-text-primary)' }}>Lease Renewal Offer</div>
+            <div style={{ fontSize: 13, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>Offer expires May 31, 2025</div>
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 500, padding: '4px 10px', borderRadius: 'var(--ds-border-radius-full)', background: 'var(--ds-color-warning-subtle)', color: 'var(--ds-color-warning)' }}>
+            Awaiting response
+          </span>
+        </div>
+        <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          {[
+            { label: 'Current lease end', value: tenant.leaseEnd },
+            { label: 'New lease term', value: 'Jul 1, 2025 – Jun 30, 2026' },
+            { label: 'Current monthly rent', value: '$1,450 / mo' },
+            { label: 'Proposed new rate', value: '$1,520 / mo' },
+          ].map(item => (
+            <div key={item.label}>
+              <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginBottom: 4 }}>{item.label}</div>
+              <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ds-color-text-primary)' }}>{item.value}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ margin: '0 20px 20px', padding: '12px 16px', background: 'var(--ds-color-primary-light)', borderRadius: 'var(--ds-border-radius-md)', display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: 13, color: 'var(--ds-color-text-primary)' }}>Rate increase</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-color-primary)' }}>+$70 / mo (4.8%)</span>
+        </div>
+        <div style={{ padding: '16px 20px', borderTop: '1px solid var(--ds-color-border)', display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+          <button onClick={() => setDecision('declined')} style={{ padding: '9px 20px', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-border)', background: 'white', color: 'var(--ds-color-text-primary)', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
+            Decline
+          </button>
+          <button onClick={() => setDecision('accepted')} style={{ padding: '9px 20px', borderRadius: 'var(--ds-border-radius-md)', border: 'none', background: 'var(--ds-color-primary)', color: 'white', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
+            Accept Renewal
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Tenant detail view ───────────────────────────────────────────────────────
+
+function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
+  const tabs: ActiveTab[] = ['overview', 'billing', 'documents', 'access', 'renewal']
+
+  return (
+    <div style={{ minHeight: '100vh', width: '100%', background: 'var(--ds-color-surface-subtle)' }}>
+      <TenantPageHeader
+        name={tenant.name}
+        email={tenant.email}
+        phone={tenant.phone}
+        balance={tenant.balance}
+        balanceOverdue={tenant.balanceOverdue}
+        unitStatus={tenant.unitStatus}
+        activeTab="overview"
+        numberOfUnits="single"
+        hideTabs={true}
+        onBack={onBack}
+      />
+
+      {/* Single tab bar with Renewal injected */}
+      <div style={{ background: 'white', borderBottom: '1px solid var(--ds-color-border)', padding: '0 24px', display: 'flex' }}>
+        {tabs.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: '12px 16px',
+              fontSize: 14,
+              fontWeight: activeTab === tab ? 600 : 400,
+              color: activeTab === tab ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === tab ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
+              cursor: 'pointer',
+              textTransform: 'capitalize',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            {tab}
+            {tab === 'renewal' && (
+              <span style={{ background: 'var(--ds-color-warning)', color: 'white', fontSize: 10, fontWeight: 700, padding: '1px 5px', borderRadius: 'var(--ds-border-radius-full)' }}>
+                NEW
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: '24px', maxWidth: 900, margin: '0 auto' }}>
+        {activeTab !== 'renewal' && (
+          <PaymentBanner
+            status={tenant.paymentStatus}
+            balanceAmount={tenant.balance}
+            dueDate="Mar 1, 2025"
+            monthlyRent="$1,450"
+            autopay={tenant.autopay}
+            cardBrand={tenant.cardBrand}
+            cardLast4={tenant.cardLast4}
+          />
+        )}
+
+        {activeTab === 'overview' && (
+          <div style={{ marginTop: 20 }}>
+            <TenantInfoCard
+              details={[
+                { label: 'Unit', value: tenant.unit },
+                { label: 'Move-in date', value: tenant.moveInDate },
+                { label: 'Lease end', value: tenant.leaseEnd },
+                { label: 'Monthly rent', value: '$1,450' },
+              ]}
+            />
+          </div>
+        )}
+
+        {activeTab === 'billing' && (
+          <div style={{ marginTop: 20, padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
+            Billing history coming soon
+          </div>
+        )}
+
+        {activeTab === 'documents' && (
+          <div style={{ marginTop: 20, padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
+            Documents coming soon
+          </div>
+        )}
+
+        {activeTab === 'access' && (
+          <div style={{ marginTop: 20, padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
+            Access log coming soon
+          </div>
+        )}
+
+        {activeTab === 'renewal' && <RenewalTab tenant={tenant} />}
+      </div>
+    </div>
+  )
+}
+
+// ─── Tenants list view ────────────────────────────────────────────────────────
+
+function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void }) {
+  return (
+    <div>
+      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--ds-color-text-primary)', margin: 0 }}>Tenants</h1>
+          <p style={{ fontSize: 14, color: 'var(--ds-color-text-muted)', margin: '4px 0 0' }}>Sunrise Self Storage · 5 tenants</p>
+        </div>
+        <button style={{
+          padding: '9px 16px',
+          background: 'var(--ds-color-primary)',
+          color: 'white',
+          border: 'none',
+          borderRadius: 'var(--ds-border-radius-md)',
+          fontSize: 14,
+          fontWeight: 500,
+          cursor: 'pointer',
+        }}>
+          + Add Tenant
+        </button>
+      </div>
+
+      <MultiUnitBanner status="overdue" unitCount={5} overdueCount={3} totalBalance="$566" />
+
+      <div style={{ marginTop: 20 }}>
+        <StatsBar />
+      </div>
+
+      {/* Clickable table */}
+      <div style={{ background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', overflow: 'hidden' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--ds-color-border)', fontSize: 13, fontWeight: 600, color: 'var(--ds-color-text-muted)', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 100px', gap: 16 }}>
+          <span>Tenant</span>
+          <span>Unit</span>
+          <span>Move-in</span>
+          <span>Balance</span>
+          <span>Status</span>
+        </div>
+        {TENANTS.map(tenant => (
+          <div
+            key={tenant.id}
+            onClick={() => onSelectTenant(tenant.id)}
+            style={{
+              padding: '14px 20px',
+              borderBottom: '1px solid var(--ds-color-border)',
+              display: 'grid',
+              gridTemplateColumns: '2fr 1fr 1fr 1fr 100px',
+              gap: 16,
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'background 0.1s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--ds-color-surface-subtle)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'white')}
+          >
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ds-color-text-primary)' }}>{tenant.name}</div>
+              <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>{tenant.email}</div>
+            </div>
+            <div style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>#{tenant.unit}</div>
+            <div style={{ fontSize: 14, color: 'var(--ds-color-text-muted)' }}>{tenant.moveInDate}</div>
+            <div style={{ fontSize: 14, fontWeight: tenant.balanceOverdue ? 600 : 400, color: tenant.balanceOverdue ? 'var(--ds-color-error)' : 'var(--ds-color-success)' }}>
+              {tenant.balance}
+            </div>
+            <div>
+              <span style={{
+                fontSize: 12,
+                fontWeight: 500,
+                padding: '3px 8px',
+                borderRadius: 'var(--ds-border-radius-full)',
+                background: tenant.unitStatus === 'overdue' ? 'var(--ds-color-error-light)' : tenant.unitStatus === 'move-out' ? 'var(--ds-color-warning-light)' : 'var(--ds-color-success-light)',
+                color: tenant.unitStatus === 'overdue' ? 'var(--ds-color-error)' : tenant.unitStatus === 'move-out' ? 'var(--ds-color-warning)' : 'var(--ds-color-success)',
+              }}>
+                {tenant.unitStatus === 'overdue' ? 'Overdue' : tenant.unitStatus === 'move-out' ? 'Move-out' : 'Good'}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── App shell ────────────────────────────────────────────────────────────────
+
+export default function App() {
+  const [nav, setNav] = useState('tenants')
+  const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null)
+
+  const selectedTenant = TENANTS.find(t => t.id === selectedTenantId)
+
+  if (selectedTenant) {
+    return (
+      <div style={{ display: 'flex', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
+        <Sidebar activeNav="tenants" onNav={(v) => { setNav(v); setSelectedTenantId(null) }} />
+        <main style={{ flex: 1, minWidth: 0, minHeight: '100vh' }}>
+          <TenantOverviewPage />
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ display: 'flex', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <Sidebar activeNav={nav} onNav={setNav} />
+      <main style={{ flex: 1, minWidth: 0, padding: '32px', background: 'var(--ds-color-surface-subtle)', minHeight: '100vh' }}>
+        {nav === 'tenants' && <TenantsView onSelectTenant={setSelectedTenantId} />}
+        {nav !== 'tenants' && (
+          <div style={{ color: 'var(--ds-color-text-muted)', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
+            Select <strong>Tenants</strong> from the sidebar to see the demo
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
