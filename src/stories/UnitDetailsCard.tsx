@@ -118,7 +118,7 @@ export const UnitDetailsCard: React.FC<UnitDetailsCardProps> = ({
   ]
 
   return (
-    <div style={{ background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-lg)', overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
       {/* Header */}
       <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--ds-color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

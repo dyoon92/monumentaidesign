@@ -169,7 +169,7 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
   const mostRecentTime = messages[0]?.time
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ fontFamily: 'Inter, sans-serif', background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden' }}>
 
       {/* Pinned notes */}
       {pinnedNotes.length > 0 && (

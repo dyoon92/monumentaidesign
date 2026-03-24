@@ -161,7 +161,7 @@ export const TenantPageHeader: React.FC<TenantPageHeaderProps> = ({
   }
 
   return (
-    <div style={{ background: 'white', borderBottom: '1px solid var(--ds-color-border)', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
 
       {/* ── Row 1: back · avatar · name + badges · actions ── */}
       <div style={{ padding: '16px 24px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

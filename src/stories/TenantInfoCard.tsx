@@ -101,9 +101,8 @@ export const TenantInfoCard: React.FC<TenantInfoCardProps> = ({
       style={{
         background: 'var(--ds-color-white)',
         border: '1px solid var(--ds-color-border)',
-        borderRadius: 8,
+        borderRadius: 16,
         padding: 24,
-        maxWidth: 464,
         width: '100%',
         fontFamily: 'Inter, sans-serif',
         boxSizing: 'border-box',
