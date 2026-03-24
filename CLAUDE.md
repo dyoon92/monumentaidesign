@@ -33,7 +33,6 @@ This keeps prototypes built from real components only — not throwaway custom U
 |---|---|---|
 | `TenantPageHeader` | `src/stories/TenantPageHeader.tsx` | Full tenant page header with tabs, balance, access |
 | `PaymentBanner` | `src/stories/PaymentBanner.tsx` | Payment status strip |
-| `MultiUnitBanner` | `src/stories/MultiUnitBanner.tsx` | Multi-unit status summary |
 | `TenantInfoCard` | `src/stories/TenantInfoCard.tsx` | Collapsible tenant details card |
 | `TenantsTable` | `src/stories/TenantsTable.tsx` | Tenants list with Current/Past tabs, row click |
 | `AccessStatus` | `src/stories/AccessStatus.tsx` | Gate/access status badge |

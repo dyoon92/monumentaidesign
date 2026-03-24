@@ -27,7 +27,6 @@ import { TenantsTable } from './stories/TenantsTable'
 import { TenantPageHeader } from './stories/TenantPageHeader'
 import { PaymentBanner } from './stories/PaymentBanner'
 import { TenantInfoCard } from './stories/TenantInfoCard'
-import { MultiUnitBanner } from './stories/MultiUnitBanner'
 import { CommunicationsPanel } from './stories/CommunicationsPanel'
 import { UnitDetailsCard } from './stories/UnitDetailsCard'
 import { Navbar, Sidebar } from './stories/AppNav'
@@ -275,7 +274,7 @@ function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void 
   return (
     <div style={{ fontFamily: 'Inter, sans-serif' }}>
       <div style={{ marginBottom: 16 }}>
-        <MultiUnitBanner status="overdue" unitCount={5} overdueCount={3} totalBalance="$566" />
+        <Placeholder name="MultiUnitBanner" />
       </div>
       <div style={{ marginBottom: 24 }}>
         <Placeholder name="StatsBar" />

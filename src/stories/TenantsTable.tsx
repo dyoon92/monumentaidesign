@@ -132,17 +132,31 @@ const CheckboxIcon = ({ checked, indeterminate = false, onChange }: { checked: b
   </div>
 )
 
+// Icons matching Figma node 8107-74197
 const SearchIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="6" cy="6" r="4.5" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" />
-    <path d="M9.5 9.5l2.5 2.5" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" strokeLinecap="round" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="7" cy="7" r="5" stroke="rgba(22,22,22,0.6)" strokeWidth="1.4" />
+    <path d="M11 11l3 3" stroke="rgba(22,22,22,0.6)" strokeWidth="1.4" strokeLinecap="round" />
   </svg>
 )
 
-const SettingsIcon = () => (
+const FilterListIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="8" cy="8" r="2" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" />
-    <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M2 4h12M4 8h8M6 12h4" stroke="rgba(22,22,22,0.8)" strokeWidth="1.4" strokeLinecap="round" />
+  </svg>
+)
+
+const ChevronDownIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 6l4 4 4-4" stroke="rgba(22,22,22,0.6)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+const MoreVerticalIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="8" cy="4" r="1.2" fill="rgba(22,22,22,0.88)" />
+    <circle cx="8" cy="8" r="1.2" fill="rgba(22,22,22,0.88)" />
+    <circle cx="8" cy="12" r="1.2" fill="rgba(22,22,22,0.88)" />
   </svg>
 )
 
@@ -181,16 +195,23 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
     }
   }
 
-  const filterSelect: React.CSSProperties = {
-    fontFamily: 'Inter, sans-serif',
-    fontSize: 13,
-    color: 'var(--ds-color-text-primary)',
-    border: '1px solid var(--ds-color-border)',
-    borderRadius: 6,
-    padding: '6px 10px',
-    background: 'var(--ds-color-white)',
+  // Shared field style from Figma node 8107-74197: white, #E1E5EF stroke, 8px radius
+  const fieldStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    background: '#ffffff',
+    border: '1px solid #E1E5EF',
+    borderRadius: 8,
+    padding: '7px 12px',
+    height: 34,
+    boxSizing: 'border-box',
     cursor: 'pointer',
-    outline: 'none',
+    fontFamily: 'Inter, sans-serif',
+    fontSize: 14,
+    color: 'rgba(22,22,22,0.6)',
+    whiteSpace: 'nowrap' as const,
+    flexShrink: 0,
   }
 
   return (
@@ -281,79 +302,59 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         })}
       </div>
 
-      {/* Filter bar */}
+      {/* Filter bar — Figma node 8107-74197 */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
-          padding: '14px 24px',
+          gap: 24,
+          padding: '12px 24px',
           borderBottom: '1px solid var(--ds-color-border)',
-          flexWrap: 'wrap',
         }}
       >
-        {/* Search */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            border: '1px solid var(--ds-color-border)',
-            borderRadius: 6,
-            padding: '6px 10px',
-            background: 'var(--ds-color-white)',
-            flex: '1 1 200px',
-            maxWidth: 280,
-          }}
-        >
+        {/* Search field — 300px with search + filter-list icons */}
+        <div style={{ ...fieldStyle, width: 300, cursor: 'text' }}>
           <SearchIcon />
           <input
             type="text"
-            placeholder="Search tenants..."
+            placeholder="Search..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             style={{
               border: 'none',
               outline: 'none',
               fontFamily: 'Inter, sans-serif',
-              fontSize: 13,
-              color: 'var(--ds-color-text-primary)',
+              fontSize: 14,
+              color: 'rgba(22,22,22,0.6)',
               background: 'transparent',
               flex: 1,
               minWidth: 0,
             }}
           />
+          <FilterListIcon />
         </div>
 
-        <select style={filterSelect}>
-          <option>Status</option>
-          <option>Overdue</option>
-          <option>Good Standing</option>
-          <option>Move Out</option>
-        </select>
+        {/* Filter dropdowns — 82px each */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {['Status', 'Move-Out Date', 'Unit Type', 'Facility', 'Floor', 'Tier', 'Rec. Services'].map(label => (
+            <div key={label} style={{ ...fieldStyle, width: 82, justifyContent: 'space-between', padding: '7px 12px', overflow: 'hidden' }}>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>{label}</span>
+              <ChevronDownIcon />
+            </div>
+          ))}
+          <button
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 14, fontWeight: 500, color: '#7D52F8', padding: '3px 0', letterSpacing: 0.28, whiteSpace: 'nowrap' }}
+          >
+            Clear all
+          </button>
+        </div>
 
-        <select style={filterSelect}>
-          <option>Move-Out Date</option>
-        </select>
-
-        <select style={filterSelect}>
-          <option>Unit Type</option>
-        </select>
-
+        {/* Kebab icon button */}
         <div style={{ marginLeft: 'auto' }}>
           <button
-            style={{
-              background: 'none',
-              border: '1px solid var(--ds-color-border)',
-              borderRadius: 6,
-              padding: '6px 10px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            style={{ width: 32, height: 32, background: '#F1F3F9', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6 }}
           >
-            <SettingsIcon />
+            <MoreVerticalIcon />
           </button>
         </div>
       </div>
