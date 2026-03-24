@@ -120,7 +120,7 @@ const DEFAULT_MESSAGES: CommunicationMessage[] = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
-  pinnedNotes = DEFAULT_PINNED_NOTES,
+  pinnedNotes = [],
   messages = DEFAULT_MESSAGES,
   onAddNote,
   onSendMessage,
