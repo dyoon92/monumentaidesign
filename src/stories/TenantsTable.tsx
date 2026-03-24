@@ -219,6 +219,8 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
       style={{
         background: '#ffffff',
         width: '100%',
+        borderRadius: 8,
+        overflow: 'hidden',
         fontFamily: 'Inter, sans-serif',
       }}
     >

@@ -306,7 +306,9 @@ export default function App() {
           {selectedTenant ? (
             <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
           ) : nav === 'tenants' ? (
-            <TenantsView onSelectTenant={setSelectedTenantId} />
+            <div style={{ padding: '20px 20px 24px' }}>
+              <TenantsView onSelectTenant={setSelectedTenantId} />
+            </div>
           ) : (
             <div style={{ color: 'var(--ds-color-text-muted)', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
               Select <strong>Tenants</strong> from the sidebar to see the demo
