@@ -108,6 +108,30 @@ const tdStyle: React.CSSProperties = {
   verticalAlign: 'middle',
 }
 
+// Custom checkbox matching Figma node 3478-11956 — square outline, no fill when unchecked
+const CheckboxIcon = ({ checked, indeterminate = false, onChange }: { checked: boolean; indeterminate?: boolean; onChange: () => void }) => (
+  <div
+    onClick={e => { e.stopPropagation(); onChange() }}
+    style={{ width: 20, height: 20, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+  >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {checked ? (
+        <>
+          <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" fill="var(--ds-color-primary)" />
+          <path d="M4 8l2.5 2.5L12 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </>
+      ) : indeterminate ? (
+        <>
+          <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" fill="var(--ds-color-primary)" />
+          <path d="M4.5 8h7" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+        </>
+      ) : (
+        <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" stroke="rgba(22,22,22,0.8)" strokeWidth="1" fill="none" />
+      )}
+    </svg>
+  </div>
+)
+
 const SearchIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="6" cy="6" r="4.5" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" />
@@ -385,12 +409,11 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              <th style={{ ...thStyle, width: 40 }}>
-                <input
-                  type="checkbox"
+              <th style={{ ...thStyle, width: 36 }}>
+                <CheckboxIcon
                   checked={selectedRows.size === displayTenants.length && displayTenants.length > 0}
+                  indeterminate={selectedRows.size > 0 && selectedRows.size < displayTenants.length}
                   onChange={toggleAll}
-                  style={{ cursor: 'pointer' }}
                 />
               </th>
               <th style={thStyle}>Tenant Name</th>
@@ -414,12 +437,10 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
                 onMouseEnter={e => { if (onRowClick) e.currentTarget.style.background = 'var(--ds-color-surface-subtle)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = selectedRows.has(tenant.id) ? 'var(--ds-color-primary-light)' : 'var(--ds-color-white)' }}
               >
-                <td style={{ ...tdStyle, width: 40 }}>
-                  <input
-                    type="checkbox"
+                <td style={{ ...tdStyle, width: 36 }}>
+                  <CheckboxIcon
                     checked={selectedRows.has(tenant.id)}
                     onChange={() => toggleRow(tenant.id)}
-                    style={{ cursor: 'pointer' }}
                   />
                 </td>
                 <td style={tdStyle}>
