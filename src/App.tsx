@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import '../src/tokens/variables.css'
-import { TenantOverviewPage } from './stories/prototypes/TenantOverviewPage'
 import { TenantsTable } from './stories/TenantsTable'
 import { TenantPageHeader } from './stories/TenantPageHeader'
 import { PaymentBanner } from './stories/PaymentBanner'
 import { TenantInfoCard } from './stories/TenantInfoCard'
 import { MultiUnitBanner } from './stories/MultiUnitBanner'
+import { CommunicationsPanel } from './stories/CommunicationsPanel'
+import { UnitDetailsCard } from './stories/UnitDetailsCard'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -364,9 +365,9 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
         ))}
       </div>
 
-      {/* Content */}
-      <div style={{ padding: '24px', maxWidth: 900, margin: '0 auto' }}>
-        {activeTab !== 'renewal' && (
+      {/* PaymentBanner — full width */}
+      {activeTab !== 'renewal' && (
+        <div style={{ padding: '20px 24px 0' }}>
           <PaymentBanner
             status={tenant.paymentStatus}
             balanceAmount={tenant.balance}
@@ -376,35 +377,50 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
             cardBrand={tenant.cardBrand}
             cardLast4={tenant.cardLast4}
           />
-        )}
+        </div>
+      )}
 
+      {/* Content */}
+      <div style={{ padding: '16px 24px 24px' }}>
         {activeTab === 'overview' && (
-          <div style={{ marginTop: 20 }}>
-            <TenantInfoCard
-              details={[
-                { label: 'Unit', value: tenant.unit },
-                { label: 'Move-in date', value: tenant.moveInDate },
-                { label: 'Lease end', value: tenant.leaseEnd },
-                { label: 'Monthly rent', value: '$1,450' },
-              ]}
-            />
+          <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+            {/* Left column */}
+            <div style={{ flex: '0 0 520px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <UnitDetailsCard
+                unitNumber={tenant.unit}
+                status={tenant.unitStatus}
+                moveInDate={tenant.moveInDate}
+              />
+              <TenantInfoCard
+                details={[
+                  { label: 'Name', value: tenant.name },
+                  { label: 'Email', value: tenant.email },
+                  { label: 'Phone', value: tenant.phone },
+                  { label: 'Lease end', value: tenant.leaseEnd },
+                ]}
+              />
+            </div>
+            {/* Right column — Communications */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <CommunicationsPanel />
+            </div>
           </div>
         )}
 
         {activeTab === 'billing' && (
-          <div style={{ marginTop: 20, padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
+          <div style={{ padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
             Billing history coming soon
           </div>
         )}
 
         {activeTab === 'documents' && (
-          <div style={{ marginTop: 20, padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
+          <div style={{ padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
             Documents coming soon
           </div>
         )}
 
         {activeTab === 'access' && (
-          <div style={{ marginTop: 20, padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
+          <div style={{ padding: 24, background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
             Access log coming soon
           </div>
         )}
@@ -512,7 +528,7 @@ export default function App() {
       <div style={{ display: 'flex', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
         <Sidebar activeNav="tenants" onNav={(v) => { setNav(v); setSelectedTenantId(null) }} />
         <main style={{ flex: 1, minWidth: 0, minHeight: '100vh' }}>
-          <TenantOverviewPage />
+          <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
         </main>
       </div>
     )
