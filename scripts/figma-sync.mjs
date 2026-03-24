@@ -18,7 +18,12 @@ const ROOT = path.resolve(__dirname, '..');
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const FIGMA_TOKEN = process.env.FIGMA_API_TOKEN || 'figd_n4pFv_6yNAYUzLQXU-vz093PvI8yEI2k6tT97StE';
+const FIGMA_TOKEN = process.env.FIGMA_API_TOKEN;
+if (!FIGMA_TOKEN) {
+  console.error('❌ FIGMA_API_TOKEN environment variable is not set.');
+  console.error('   Run: export FIGMA_API_TOKEN=your_token_here');
+  process.exit(1);
+}
 const FILE_KEY    = 'yx1WkUL3HKF2YVpFRKA7y7';
 const API_BASE    = 'https://api.figma.com/v1';
 
