@@ -294,17 +294,13 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         })}
       </div>
 
-      {/* White card: filter bar + bulk bar + table */}
-      <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
-
-      {/* Filter bar — Figma node 8107-74197 */}
+      {/* Filter bar — on page bg, outside white card */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 24,
-          padding: '12px 24px',
-          borderBottom: '1px solid var(--ds-color-border)',
+          marginBottom: 20,
         }}
       >
         {/* Search field — 300px with search + filter-list icons */}
@@ -353,6 +349,9 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
           </button>
         </div>
       </div>
+
+      {/* White card: bulk bar + table */}
+      <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
 
       {/* Bulk action bar */}
       <div
