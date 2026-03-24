@@ -215,22 +215,14 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
   }
 
   return (
-    <div
-      style={{
-        background: '#ffffff',
-        width: '100%',
-        borderRadius: 8,
-        overflow: 'hidden',
-        fontFamily: 'Inter, sans-serif',
-      }}
-    >
-      {/* Header */}
+    <div style={{ width: '100%', fontFamily: 'Inter, sans-serif' }}>
+      {/* Page header — sits on page bg, outside the white card */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '24px 24px 0',
+          marginBottom: 16,
         }}
       >
         <span style={{ fontSize: 28, fontWeight: 700, color: 'var(--ds-color-text-primary)' }}>Tenants</span>
@@ -241,7 +233,7 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
             fontSize: 14,
             fontWeight: 500,
             background: 'var(--ds-color-primary)',
-            color: 'var(--ds-color-white)',
+            color: '#ffffff',
             border: 'none',
             borderRadius: 6,
             padding: '9px 16px',
@@ -252,13 +244,15 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         </button>
       </div>
 
+      {/* White card: tab bar + filter bar + table */}
+      <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
+
       {/* Tab bar */}
       <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
           padding: '0 24px',
-          marginTop: 16,
           borderBottom: '1px solid var(--ds-color-border)',
           gap: 0,
         }}
@@ -492,6 +486,7 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   )
