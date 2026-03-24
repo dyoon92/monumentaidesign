@@ -336,162 +336,32 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
 
 // ─── Tenants list view ────────────────────────────────────────────────────────
 
-type TenantsTab = 'current' | 'past' | 'leads'
-
-const PAYMENT_STATUS_CONFIG = {
-  'balance-due': { label: 'Overdue', bg: 'var(--ds-color-error-light)', color: 'var(--ds-color-error)' },
-  'good-standing': { label: 'Paid', bg: 'var(--ds-color-success-light)', color: 'var(--ds-color-success)' },
-  'move-out': { label: 'Move-Out', bg: 'var(--ds-color-warning-light)', color: 'var(--ds-color-warning)' },
-  'updated': { label: 'Updated', bg: 'var(--ds-color-error-light)', color: 'var(--ds-color-error)' },
-}
-
-const SearchIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <circle cx="6" cy="6" r="4.5" stroke="var(--ds-color-text-muted)" strokeWidth="1.2"/>
-    <path d="M10 10l2.5 2.5" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" strokeLinecap="round"/>
-  </svg>
-)
-
-const FilterIcon2 = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M1.5 3.5h11M3.5 7h7M5.5 10.5h3" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" strokeLinecap="round"/>
-  </svg>
-)
-
 function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void }) {
-  const [activeTab, setActiveTab] = useState<TenantsTab>('current')
-  const [search, setSearch] = useState('')
-
-  const tabs: { id: TenantsTab; label: string; count?: number }[] = [
-    { id: 'current', label: 'Current', count: TENANTS.filter(t => t.paymentStatus !== 'move-out').length },
-    { id: 'past', label: 'Past' },
-    { id: 'leads', label: 'Leads' },
-  ]
-
-  const filtered = TENANTS.filter(t =>
-    t.name.toLowerCase().includes(search.toLowerCase()) ||
-    t.email.toLowerCase().includes(search.toLowerCase()) ||
-    t.unit.includes(search)
-  )
-
-  const COLS = 'minmax(180px,2fr) 120px 140px 100px 120px 110px'
+  const mappedTenants = TENANTS.map(t => ({
+    id: t.id,
+    name: t.name,
+    unit: t.unit,
+    status: (t.paymentStatus === 'balance-due' || t.paymentStatus === 'updated'
+      ? 'overdue'
+      : t.paymentStatus === 'move-out'
+      ? 'move-out'
+      : 'good-standing') as 'overdue' | 'good-standing' | 'move-out' | 'past',
+    moveInDate: t.moveInDate,
+    balance: t.balance,
+    recServices: t.autopay,
+  }))
 
   return (
     <div style={{ fontFamily: 'Inter, sans-serif' }}>
-      {/* Page header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--ds-color-text-primary)', margin: 0 }}>Tenants</h1>
-        <button style={{ padding: '8px 16px', background: 'var(--ds-color-primary)', color: 'white', border: 'none', borderRadius: 'var(--ds-border-radius-md)', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-          + Add Tenant
-        </button>
+      <div style={{ marginBottom: 16 }}>
+        <MultiUnitBanner status="overdue" unitCount={5} overdueCount={3} totalBalance="$566" />
       </div>
-
-      <MultiUnitBanner status="overdue" unitCount={5} overdueCount={3} totalBalance="$566" />
-
-      <div style={{ marginTop: 16 }}>
-        <StatsBar />
-      </div>
-
-      {/* Tab bar */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--ds-color-border)', marginBottom: 0, background: 'white', borderRadius: '8px 8px 0 0' }}>
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '12px 16px',
-              fontSize: 14,
-              fontWeight: activeTab === tab.id ? 600 : 400,
-              color: activeTab === tab.id ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
-              background: 'none',
-              border: 'none',
-              borderBottom: activeTab === tab.id ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
-              cursor: 'pointer',
-              fontFamily: 'Inter, sans-serif',
-              marginBottom: -1,
-            }}
-          >
-            {tab.label}
-            {tab.count !== undefined && (
-              <span style={{ background: 'var(--ds-color-surface-muted)', color: 'var(--ds-color-text-muted)', fontSize: 11, fontWeight: 600, borderRadius: 'var(--ds-border-radius-full)', padding: '1px 6px' }}>
-                {tab.count}
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* Filter bar */}
-      <div style={{ background: 'white', borderBottom: '1px solid var(--ds-color-border)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--ds-color-surface-subtle)', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-md)', padding: '6px 10px', flex: '0 0 260px' }}>
-          <SearchIcon />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search tenants..."
-            style={{ border: 'none', background: 'transparent', fontSize: 13, color: 'var(--ds-color-text-primary)', outline: 'none', width: '100%', fontFamily: 'Inter, sans-serif' }}
-          />
-        </div>
-        <button style={{ width: 32, height: 32, background: 'var(--ds-color-surface-subtle)', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-md)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <FilterIcon2 />
-        </button>
-      </div>
-
-      {/* Table */}
-      <div style={{ background: 'white', borderRadius: '0 0 8px 8px', border: '1px solid var(--ds-color-border)', borderTop: 'none', overflow: 'hidden' }}>
-        {/* Header */}
-        <div style={{ display: 'grid', gridTemplateColumns: COLS, gap: 0, padding: '10px 16px', borderBottom: '1px solid var(--ds-color-border)', background: 'var(--ds-color-surface-subtle)' }}>
-          {['Name', 'Payment Status', 'Contact Info', 'Units', 'Total Mo. Rent', 'Balance'].map(col => (
-            <span key={col} style={{ fontSize: 12, fontWeight: 600, color: 'var(--ds-color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>{col}</span>
-          ))}
-        </div>
-
-        {/* Rows */}
-        {filtered.map(tenant => {
-          const status = PAYMENT_STATUS_CONFIG[tenant.paymentStatus]
-          return (
-            <div
-              key={tenant.id}
-              onClick={() => onSelectTenant(tenant.id)}
-              style={{ display: 'grid', gridTemplateColumns: COLS, gap: 0, padding: '12px 16px', borderBottom: '1px solid var(--ds-color-border)', alignItems: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'var(--ds-color-surface-subtle)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'white')}
-            >
-              {/* Name */}
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ds-color-text-primary)' }}>{tenant.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>Personal</div>
-              </div>
-              {/* Payment Status */}
-              <div>
-                <span style={{ fontSize: 12, fontWeight: 500, padding: '3px 8px', borderRadius: 'var(--ds-border-radius-full)', background: status.bg, color: status.color }}>
-                  {status.label}
-                </span>
-                <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 3 }}>{tenant.email}</div>
-              </div>
-              {/* Contact */}
-              <div style={{ fontSize: 13, color: 'var(--ds-color-text-primary)' }}>{tenant.phone}</div>
-              {/* Units */}
-              <div style={{ fontSize: 13, color: 'var(--ds-color-text-primary)' }}>#{tenant.unit}</div>
-              {/* Total Monthly Rent */}
-              <div style={{ fontSize: 13, color: 'var(--ds-color-text-primary)' }}>$1,450</div>
-              {/* Balance */}
-              <div style={{ fontSize: 13, fontWeight: tenant.balanceOverdue ? 600 : 400, color: tenant.balanceOverdue ? 'var(--ds-color-error)' : 'var(--ds-color-text-primary)' }}>
-                {tenant.balance}
-              </div>
-            </div>
-          )
-        })}
-
-        {filtered.length === 0 && (
-          <div style={{ padding: 32, textAlign: 'center', color: 'var(--ds-color-text-muted)', fontSize: 14 }}>
-            No tenants found
-          </div>
-        )}
-      </div>
+      <StatsBar />
+      <TenantsTable
+        tenants={mappedTenants}
+        onRowClick={onSelectTenant}
+        onAddTenant={() => {}}
+      />
     </div>
   )
 }

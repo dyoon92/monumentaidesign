@@ -15,6 +15,7 @@ export interface TenantsTableProps {
   tenants?: Tenant[]
   onTabChange?: (tab: string) => void
   onAddTenant?: () => void
+  onRowClick?: (id: string) => void
 }
 
 const currentTenants: Tenant[] = [
@@ -126,6 +127,7 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
   tenants,
   onTabChange,
   onAddTenant,
+  onRowClick,
 }) => {
   const [selectedTab, setSelectedTab] = useState(tab)
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set())
@@ -404,9 +406,13 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
             {displayTenants.map((tenant) => (
               <tr
                 key={tenant.id}
+                onClick={() => onRowClick?.(tenant.id)}
                 style={{
                   background: selectedRows.has(tenant.id) ? 'var(--ds-color-primary-light)' : 'var(--ds-color-white)',
+                  cursor: onRowClick ? 'pointer' : 'default',
                 }}
+                onMouseEnter={e => { if (onRowClick) e.currentTarget.style.background = 'var(--ds-color-surface-subtle)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = selectedRows.has(tenant.id) ? 'var(--ds-color-primary-light)' : 'var(--ds-color-white)' }}
               >
                 <td style={{ ...tdStyle, width: 40 }}>
                   <input
