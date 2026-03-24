@@ -247,12 +247,11 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
       {/* White card: tab bar + filter bar + table */}
       <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
 
-      {/* Tab bar */}
+      {/* Tab bar — no bg, no horizontal padding */}
       <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
-          padding: '0 24px',
           borderBottom: '1px solid var(--ds-color-border)',
           gap: 0,
         }}
@@ -297,13 +296,14 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         })}
       </div>
 
-      {/* Filter bar — Figma node 8107-74197 */}
+      {/* Filter bar — Figma node 8107-74197, 20px gap from tab bar */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 24,
           padding: '12px 24px',
+          marginTop: 20,
           borderBottom: '1px solid var(--ds-color-border)',
         }}
       >
