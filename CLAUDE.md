@@ -42,6 +42,9 @@ This keeps prototypes built from real components only — not throwaway custom U
 | `Sidebar` | `src/stories/AppNav.tsx` | Left nav: collapsible, all nav items, user footer |
 | `Tabs` | `src/stories/Tabs.tsx` | Horizontal tab bar with optional count badges |
 | `PinnedNotes` | `src/stories/PinnedNotes.tsx` | Pinned message cards with amber border, pin icon, Read More |
+| `Button` | `src/stories/Button.tsx` | Primary/Secondary/Danger/Warning/White · sm/md/lg |
+| `Input` | `src/stories/Input.tsx` | Text input with floating label, states, hint, feedback |
+| `Badge` | `src/stories/Badge.tsx` | General, UnitBadge, CommBadge · high/low contrast · lg/sm |
 
 ---
 
