@@ -272,19 +272,11 @@ function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void 
   }))
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif' }}>
-      <div style={{ marginBottom: 16 }}>
-        <Placeholder name="MultiUnitBanner" />
-      </div>
-      <div style={{ marginBottom: 24 }}>
-        <Placeholder name="StatsBar" />
-      </div>
-      <TenantsTable
-        tenants={mappedTenants}
-        onRowClick={onSelectTenant}
-        onAddTenant={() => {}}
-      />
-    </div>
+    <TenantsTable
+      tenants={mappedTenants}
+      onRowClick={onSelectTenant}
+      onAddTenant={() => {}}
+    />
   )
 }
 
@@ -310,13 +302,11 @@ export default function App() {
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         <Sidebar activeNav={nav} onNav={handleNav} userName="Dave Yoon" userEmail="dave@monumentai.com" />
 
-        <main style={{ flex: 1, minWidth: 0, background: 'var(--ds-color-surface-subtle)', overflowY: 'auto' }}>
+        <main style={{ flex: 1, minWidth: 0, background: '#F1F3F9', overflowY: 'auto' }}>
           {selectedTenant ? (
             <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
           ) : nav === 'tenants' ? (
-            <div style={{ padding: '32px' }}>
-              <TenantsView onSelectTenant={setSelectedTenantId} />
-            </div>
+            <TenantsView onSelectTenant={setSelectedTenantId} />
           ) : (
             <div style={{ color: 'var(--ds-color-text-muted)', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
               Select <strong>Tenants</strong> from the sidebar to see the demo
