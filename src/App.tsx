@@ -432,11 +432,11 @@ export default function App() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100vh', fontFamily: 'Inter, system-ui, sans-serif', overflow: 'hidden' }}>
       {/* Top navbar */}
       <Navbar facilityName="Sunrise Self Storage" userName="DY" tasksCount={24} />
 
-      {/* Below navbar: sidebar + content */}
+      {/* Below navbar: sidebar + content — fills remaining height */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         <Sidebar activeNav={nav} onNav={handleNav} userName="Dave Yoon" userEmail="dave@monumentai.com" />
 

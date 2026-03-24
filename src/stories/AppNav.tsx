@@ -303,19 +303,18 @@ export const Sidebar: React.FC<AppNavProps> = ({
   return (
     <aside style={{
       width,
-      minHeight: '100%',
+      height: '100%',
       background: 'white',
       borderRight: '1px solid var(--ds-color-border)',
       display: 'flex',
       flexDirection: 'column',
       flexShrink: 0,
       transition: 'width 0.2s ease',
-      overflow: 'hidden',
       fontFamily: 'Inter, sans-serif',
       position: 'relative',
     }}>
       {/* Main nav items */}
-      <nav style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
+      <nav style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto', overflowX: 'hidden' }}>
         {NAV_ITEMS.map(item => {
           const active = activeNav === item.id
           return (
@@ -445,10 +444,11 @@ export const Sidebar: React.FC<AppNavProps> = ({
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(v => !v)}
+        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         style={{
           position: 'absolute',
           top: 16,
-          right: -12,
+          right: 8,
           width: 24,
           height: 24,
           borderRadius: '50%',
