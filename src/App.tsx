@@ -143,7 +143,8 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
   const tabs: ActiveTab[] = ['overview', 'billing', 'documents', 'access', 'renewal']
 
   return (
-    <div style={{ minHeight: '100vh', width: '100%', background: 'var(--ds-color-surface-subtle)' }}>
+    <div style={{ padding: '20px 20px 24px' }}>
+      {/* Header card */}
       <TenantPageHeader
         name={tenant.name}
         email={tenant.email}
@@ -157,25 +158,27 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
         onBack={onBack}
       />
 
-      {/* Single tab bar with Renewal injected */}
-      <div style={{ background: 'white', borderBottom: '1px solid var(--ds-color-border)', padding: '0 24px', display: 'flex' }}>
+      {/* Tab bar — on page bg, no white behind it */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--ds-color-border)', margin: '16px 0' }}>
         {tabs.map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{
-              padding: '12px 16px',
+              padding: '8px 16px',
               fontSize: 14,
               fontWeight: activeTab === tab ? 600 : 400,
               color: activeTab === tab ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
               background: 'none',
               border: 'none',
               borderBottom: activeTab === tab ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
+              marginBottom: -1,
               cursor: 'pointer',
               textTransform: 'capitalize',
               display: 'flex',
               alignItems: 'center',
               gap: 6,
+              fontFamily: 'Inter, sans-serif',
             }}
           >
             {tab}
@@ -188,9 +191,9 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
         ))}
       </div>
 
-      {/* PaymentBanner — full width */}
+      {/* PaymentBanner */}
       {activeTab !== 'renewal' && (
-        <div style={{ padding: '20px 24px 0' }}>
+        <div style={{ marginBottom: 16 }}>
           <PaymentBanner
             status={tenant.paymentStatus}
             balanceAmount={tenant.balance}
@@ -204,7 +207,7 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
       )}
 
       {/* Content */}
-      <div style={{ padding: '16px 24px 24px' }}>
+      <div>
         {activeTab === 'overview' && (
           <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
             {/* Left column */}
