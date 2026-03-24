@@ -228,6 +228,41 @@ async function main() {
 
   console.log('✅ CSS variables → src/tokens/variables.css');
   console.log('✅ TS constants  → src/tokens/tokens.ts');
+
+  // ─── Icon export ────────────────────────────────────────────────────────────
+  console.log('\n🖼  Exporting icons from Figma...');
+  const ICON_NODES = {
+    'activity':              '3:3751',
+    'calendar':              '3:3564',
+    'calendar-empty-alt':    '3:3563',
+    'envelope':              'I3:3710;16458:8350',
+    'hand-holding-dollar':   '3:3562',
+    'messages-dots':         'I3:3567;16458:8348',
+    'presentation-dollar':   '3:3560',
+    'presentation-trend-up': '3:3559',
+    'question-circle':       '3:3572',
+    'sack-dollar':           '3:3561',
+    'sticky-note-square':    '2939:23051',
+    'thumbtack':             '2939:23050',
+  };
+
+  const ids = Object.values(ICON_NODES).join(',');
+  const imgRes = await figmaGet(`/images/${FILE_KEY}?ids=${encodeURIComponent(ids)}&format=svg`);
+  const imgMap = imgRes.images || {};
+
+  const iconsDir = path.join(ROOT, 'src/stories/assets/icons');
+  fs.mkdirSync(iconsDir, { recursive: true });
+
+  let downloaded = 0;
+  for (const [name, nodeId] of Object.entries(ICON_NODES)) {
+    const url = imgMap[nodeId];
+    if (!url) { console.log(`   ⚠️  ${name} — no URL returned`); continue; }
+    const svg = await fetch(url).then(r => r.text());
+    fs.writeFileSync(path.join(iconsDir, `${name}.svg`), svg);
+    downloaded++;
+  }
+  console.log(`✅ ${downloaded} icons → src/stories/assets/icons/`);
+
   console.log('\n🎉 Sync complete! Storybook will pick up changes on next reload.');
   console.log(`   Last Figma change: ${lastModified}`);
 }
