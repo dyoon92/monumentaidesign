@@ -217,9 +217,8 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
   return (
     <div
       style={{
-        background: 'var(--ds-color-white)',
+        background: '#ffffff',
         width: '100%',
-        minHeight: '100vh',
         fontFamily: 'Inter, sans-serif',
       }}
     >
