@@ -393,23 +393,27 @@ export function TenantOverviewPage() {
         ))}
       </div>
 
+      {/* PaymentBanner — full width above columns */}
+      <div style={{ padding: '20px 24px 0' }}>
+        <PaymentBanner
+          status="balance-due"
+          balanceAmount="$132.00"
+          dueDate="Jul 29, 2024"
+          paidThrough="Jun 29, 2024"
+          lastPayment="May 2, 2024"
+          cardBrand="Mastercard"
+          cardLast4="8425"
+          cardExpiry="Dec, 2025"
+          autopay={true}
+          monthlyRent="$115"
+        />
+      </div>
+
       {/* Two-column content */}
-      <div style={{ display: 'flex', gap: 20, padding: '24px', alignItems: 'flex-start', boxSizing: 'border-box', width: '100%' }}>
+      <div style={{ display: 'flex', gap: 20, padding: '16px 24px 24px', alignItems: 'flex-start', boxSizing: 'border-box', width: '100%' }}>
 
         {/* Left */}
         <div style={{ flex: '0 0 520px', display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <PaymentBanner
-            status="balance-due"
-            balanceAmount="$132.00"
-            dueDate="Jul 29, 2024"
-            paidThrough="Jun 29, 2024"
-            lastPayment="May 2, 2024"
-            cardBrand="Mastercard"
-            cardLast4="8425"
-            cardExpiry="Dec, 2025"
-            autopay={true}
-            monthlyRent="$115"
-          />
           <UnitDetailsCard />
           <TenantInfoCard
             details={[
@@ -429,7 +433,7 @@ export function TenantOverviewPage() {
         </div>
 
         {/* Right */}
-        <div style={{ flex: 1, minWidth: 0, position: 'sticky', top: 24, maxHeight: 'calc(100vh - 160px)', overflowY: 'auto' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <CommunicationsPanel />
         </div>
 

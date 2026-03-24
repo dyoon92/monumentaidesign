@@ -132,7 +132,7 @@ export const PaymentBanner: React.FC<PaymentBannerProps> = ({
   return (
     <div
       style={{
-        width: 1160,
+        width: '100%',
         background: 'var(--ds-color-white)',
         display: 'flex',
         flexDirection: 'row',
