@@ -244,15 +244,13 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         </button>
       </div>
 
-      {/* White card: tab bar + filter bar + table */}
-      <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
-
-      {/* Tab bar — no bg, no horizontal padding */}
+      {/* Tab bar — on page bg, outside white card */}
       <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
           borderBottom: '1px solid var(--ds-color-border)',
+          marginBottom: 20,
           gap: 0,
         }}
       >
@@ -296,14 +294,16 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         })}
       </div>
 
-      {/* Filter bar — Figma node 8107-74197, 20px gap from tab bar */}
+      {/* White card: filter bar + bulk bar + table */}
+      <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
+
+      {/* Filter bar — Figma node 8107-74197 */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 24,
           padding: '12px 24px',
-          marginTop: 20,
           borderBottom: '1px solid var(--ds-color-border)',
         }}
       >
