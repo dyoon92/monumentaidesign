@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Tabs } from './Tabs'
 
 export interface Tenant {
   id: string
@@ -244,54 +245,13 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
         </button>
       </div>
 
-      {/* Tab bar — on page bg, outside white card */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          borderBottom: '1px solid var(--ds-color-border)',
-          marginBottom: 20,
-          gap: 0,
-        }}
-      >
-        {tableTabs.map((t) => {
-          const isActive = selectedTab === t.key
-          return (
-            <button
-              key={t.key}
-              onClick={() => handleTabChange(t.key)}
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontSize: 14,
-                fontWeight: isActive ? 700 : 500,
-                color: isActive ? 'var(--ds-color-primary)' : 'var(--ds-color-text-primary)',
-                background: 'none',
-                border: 'none',
-                borderBottom: isActive ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
-                cursor: 'pointer',
-                padding: '8px 16px',
-                marginBottom: -1,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-              }}
-            >
-              {t.label}
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  background: isActive ? 'var(--ds-color-primary-light)' : 'var(--ds-color-surface-muted)',
-                  color: isActive ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
-                  borderRadius: 10,
-                  padding: '1px 7px',
-                }}
-              >
-                {t.count}
-              </span>
-            </button>
-          )
-        })}
+      {/* Tab bar — Tabs component from Figma node 8107-365538 */}
+      <div style={{ marginBottom: 20 }}>
+        <Tabs
+          tabs={tableTabs.map(t => ({ key: t.key, label: t.label, count: t.count }))}
+          activeKey={selectedTab}
+          onTabChange={handleTabChange}
+        />
       </div>
 
       {/* Filter bar — on page bg, outside white card */}

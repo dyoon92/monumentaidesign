@@ -17,3 +17,22 @@ export const Default: NavbarStory = {
     tasksCount: 24,
   },
 }
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+
+export const SidebarDefault: StoryObj<typeof Sidebar> = {
+  name: 'Sidebar',
+  render: (args) => {
+    const React = require('react')
+    return React.createElement(
+      'div',
+      { style: { display: 'flex', height: '100vh' } },
+      React.createElement(Sidebar, args)
+    )
+  },
+  args: {
+    activeNav: 'tenants',
+    userName: 'Dave Yoon',
+    userEmail: 'dave@monumentai.com',
+  },
+}

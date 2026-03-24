@@ -40,6 +40,7 @@ This keeps prototypes built from real components only — not throwaway custom U
 | `CommunicationsPanel` | `src/stories/CommunicationsPanel.tsx` | Message feed with pinned notes, lock/note/email types |
 | `Navbar` | `src/stories/AppNav.tsx` | Top navbar: logo, facility, search, tasks, avatar |
 | `Sidebar` | `src/stories/AppNav.tsx` | Left nav: collapsible, all nav items, user footer |
+| `Tabs` | `src/stories/Tabs.tsx` | Horizontal tab bar with optional count badges |
 
 ---
 

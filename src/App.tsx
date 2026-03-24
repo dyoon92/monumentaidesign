@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Tabs } from './stories/Tabs'
 
 // ─── Placeholder ──────────────────────────────────────────────────────────────
 // Used when a component has not yet been designed in Figma + added to src/stories/
@@ -158,37 +159,13 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
         onBack={onBack}
       />
 
-      {/* Tab bar — on page bg, no white behind it */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--ds-color-border)', margin: '16px 0' }}>
-        {tabs.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '8px 16px',
-              fontSize: 14,
-              fontWeight: activeTab === tab ? 600 : 400,
-              color: activeTab === tab ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
-              background: 'none',
-              border: 'none',
-              borderBottom: activeTab === tab ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
-              marginBottom: -1,
-              cursor: 'pointer',
-              textTransform: 'capitalize',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontFamily: 'Inter, sans-serif',
-            }}
-          >
-            {tab}
-            {tab === 'renewal' && (
-              <span style={{ background: 'var(--ds-color-warning)', color: 'white', fontSize: 10, fontWeight: 700, padding: '1px 5px', borderRadius: 'var(--ds-border-radius-full)' }}>
-                NEW
-              </span>
-            )}
-          </button>
-        ))}
+      {/* Tab bar — Tabs component from Figma node 8107-365538 */}
+      <div style={{ margin: '16px 0' }}>
+        <Tabs
+          tabs={tabs.map(t => ({ key: t, label: t.charAt(0).toUpperCase() + t.slice(1) }))}
+          activeKey={activeTab}
+          onTabChange={key => setActiveTab(key as ActiveTab)}
+        />
       </div>
 
       {/* PaymentBanner */}
