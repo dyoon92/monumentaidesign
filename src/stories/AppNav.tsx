@@ -311,10 +311,35 @@ export const Sidebar: React.FC<AppNavProps> = ({
       flexShrink: 0,
       transition: 'width 0.2s ease',
       fontFamily: 'Inter, sans-serif',
-      position: 'relative',
+      overflow: 'hidden',
     }}>
+      {/* Collapse toggle row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-end', padding: '10px 8px 4px', flexShrink: 0 }}>
+        <button
+          onClick={() => setCollapsed(v => !v)}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 'var(--ds-border-radius-md)',
+            background: 'var(--ds-color-surface-muted)',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--ds-color-text-muted)',
+            flexShrink: 0,
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
+            <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
       {/* Main nav items */}
-      <nav style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto', overflowX: 'hidden' }}>
+      <nav style={{ flex: 1, padding: '4px 8px 12px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto', overflowX: 'hidden' }}>
         {NAV_ITEMS.map(item => {
           const active = activeNav === item.id
           return (
@@ -441,34 +466,6 @@ export const Sidebar: React.FC<AppNavProps> = ({
         )}
       </div>
 
-      {/* Collapse toggle */}
-      <button
-        onClick={() => setCollapsed(v => !v)}
-        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        style={{
-          position: 'absolute',
-          top: 16,
-          right: 8,
-          width: 24,
-          height: 24,
-          borderRadius: '50%',
-          background: 'white',
-          border: '1px solid var(--ds-color-border)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-          zIndex: 10,
-          color: 'var(--ds-color-text-muted)',
-          transform: collapsed ? 'rotate(180deg)' : 'none',
-          transition: 'transform 0.2s ease',
-        }}
-      >
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M6.5 2L3.5 5l3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
     </aside>
   )
 }
