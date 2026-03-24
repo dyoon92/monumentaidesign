@@ -41,6 +41,7 @@ This keeps prototypes built from real components only — not throwaway custom U
 | `Navbar` | `src/stories/AppNav.tsx` | Top navbar: logo, facility, search, tasks, avatar |
 | `Sidebar` | `src/stories/AppNav.tsx` | Left nav: collapsible, all nav items, user footer |
 | `Tabs` | `src/stories/Tabs.tsx` | Horizontal tab bar with optional count badges |
+| `PinnedNotes` | `src/stories/PinnedNotes.tsx` | Pinned message cards with amber border, pin icon, Read More |
 
 ---
 

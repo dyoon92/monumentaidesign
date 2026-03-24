@@ -1,13 +1,6 @@
 import React from 'react'
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
-const PushpinIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M9 1L13 5L10 8L10.5 12L7 9L3.5 12.5L4 8L1 5L5 5L9 1Z"
-      fill="var(--ds-color-warning)" stroke="var(--ds-color-warning)" strokeWidth="0.5" strokeLinejoin="round" />
-  </svg>
-)
+import { PinnedNotes } from './PinnedNotes'
+export type { PinnedNote } from './PinnedNotes'
 
 const LockIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -58,15 +51,6 @@ const ChevronDownIcon = () => (
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export interface PinnedNote {
-  pinnedBy: string
-  pinnedAt: string
-  createdBy: string
-  createdAt: string
-  message: string
-  truncated?: boolean
-}
-
 export interface LockMessage {
   type: 'lock'
   time: string
@@ -102,31 +86,6 @@ export interface CommunicationsPanelProps {
 }
 
 // ─── Defaults ─────────────────────────────────────────────────────────────────
-
-const DEFAULT_PINNED_NOTES: PinnedNote[] = [
-  {
-    pinnedBy: 'Jane Doe',
-    pinnedAt: '6/25/25 at 6:00PM',
-    createdBy: 'David Peterson',
-    createdAt: '5/14/25 at 9:00AM',
-    message: 'Unit 204 has been marked as Unrentable due to a roof leak that caused significant water damage on the back wall and floor. A task has been opened with the maintenance team!',
-  },
-  {
-    pinnedBy: 'Jane Doe',
-    pinnedAt: '6/25/25 at 6:00PM',
-    createdBy: 'David Peterson',
-    createdAt: '5/14/25 at 9:00AM',
-    message: 'Unit 204 has been marked as Unrentable due to a roof leak that caused significant water damage on the back wall and floor. A task has been opened with the maintenance team!',
-  },
-  {
-    pinnedBy: 'Jane Doe',
-    pinnedAt: '6/25/25 at 6:00PM',
-    createdBy: 'David Peterson',
-    createdAt: '5/14/25 at 9:00AM',
-    message: 'Unit 204 has been marked as Unrentable due to a roof leak that caused significant water damage on the back wall and floor. A task has been opened with the maintenance team!',
-    truncated: true,
-  },
-]
 
 const DEFAULT_MESSAGES: CommunicationMessage[] = [
   {
@@ -171,50 +130,9 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
   return (
     <div style={{ fontFamily: 'Inter, sans-serif', background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden' }}>
 
-      {/* Pinned notes */}
+      {/* Pinned notes — PinnedNotes component, Figma node 17392-4568 */}
       {pinnedNotes.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
-          {pinnedNotes.map((note, i) => (
-            <div
-              key={i}
-              style={{
-                background: 'var(--ds-color-warning-subtle)',
-                border: '1px solid var(--ds-color-warning-light)',
-                borderRadius: 'var(--ds-border-radius-lg)',
-                padding: '12px 14px',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 6 }}>
-                <PushpinIcon />
-                <span style={{ fontSize: 11, color: 'var(--ds-color-text-muted)', lineHeight: 1.4 }}>
-                  Pinned on {note.pinnedAt} by {note.pinnedBy} · Created on {note.createdAt} by {note.createdBy}
-                </span>
-              </div>
-              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5, color: 'var(--ds-color-text-primary)' }}>
-                {note.message}
-                {note.truncated && (
-                  <>
-                    {' '}
-                    <button
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: 'var(--ds-color-primary)',
-                        fontSize: 13,
-                        fontFamily: 'Inter, sans-serif',
-                        padding: 0,
-                        fontWeight: 500,
-                      }}
-                    >
-                      Read More
-                    </button>
-                  </>
-                )}
-              </p>
-            </div>
-          ))}
-        </div>
+        <PinnedNotes notes={pinnedNotes} />
       )}
 
       {/* Filter bar */}
