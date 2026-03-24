@@ -1,4 +1,27 @@
 import { useState } from 'react'
+
+// ─── Placeholder ──────────────────────────────────────────────────────────────
+// Used when a component has not yet been designed in Figma + added to src/stories/
+
+function Placeholder({ name }: { name: string }) {
+  return (
+    <div style={{
+      padding: '20px 24px',
+      background: 'var(--ds-color-surface-subtle)',
+      border: '2px dashed var(--ds-color-border)',
+      borderRadius: 'var(--ds-border-radius-lg)',
+      fontFamily: 'Inter, sans-serif',
+    }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-color-text-muted)', marginBottom: 4 }}>
+        ⚠️ Missing component: {name}
+      </div>
+      <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)' }}>
+        This needs to be designed in Figma first before it can be built.
+        Next step: file a design request so it can be added to the component library.
+      </div>
+    </div>
+  )
+}
 import '../src/tokens/variables.css'
 import { TenantsTable } from './stories/TenantsTable'
 import { TenantPageHeader } from './stories/TenantPageHeader'
@@ -112,109 +135,7 @@ const TENANTS: TenantRecord[] = [
 ]
 
 
-// ─── Stats bar ────────────────────────────────────────────────────────────────
 
-function StatsBar() {
-  const stats = [
-    { label: 'Total Tenants', value: '5', sub: '4 active units' },
-    { label: 'Overdue Balance', value: '$566', sub: '3 tenants', color: 'var(--ds-color-error)' },
-    { label: 'Autopay Enrolled', value: '2', sub: '40% of tenants', color: 'var(--ds-color-success)' },
-    { label: 'Move-Outs This Month', value: '1', sub: 'Unit 281', color: 'var(--ds-color-warning)' },
-  ]
-
-  return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: 16,
-      marginBottom: 24,
-    }}>
-      {stats.map(stat => (
-        <div key={stat.label} style={{
-          background: 'white',
-          border: '1px solid var(--ds-color-border)',
-          borderRadius: 'var(--ds-border-radius-lg)',
-          padding: '16px 20px',
-        }}>
-          <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginBottom: 6 }}>{stat.label}</div>
-          <div style={{ fontSize: 24, fontWeight: 700, color: stat.color || 'var(--ds-color-text-primary)', lineHeight: 1 }}>{stat.value}</div>
-          <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginTop: 4 }}>{stat.sub}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// ─── Renewal tab ──────────────────────────────────────────────────────────────
-
-function RenewalTab({ tenant }: { tenant: TenantRecord }) {
-  const [decision, setDecision] = useState<'accepted' | 'declined' | null>(null)
-
-  if (decision === 'accepted') {
-    return (
-      <div style={{ margin: '24px 0', padding: '32px', background: 'var(--ds-color-success-light)', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-success)', textAlign: 'center' }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>✓</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ds-color-success)' }}>Lease renewal accepted</div>
-        <div style={{ fontSize: 14, color: 'var(--ds-color-text-muted)', marginTop: 6 }}>
-          New lease begins Jul 1, 2025 · $1,520 / mo · 12-month term
-        </div>
-      </div>
-    )
-  }
-
-  if (decision === 'declined') {
-    return (
-      <div style={{ margin: '24px 0', padding: '32px', background: 'var(--ds-color-error-subtle)', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-error)', textAlign: 'center' }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>✕</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ds-color-error)' }}>Renewal declined</div>
-        <div style={{ fontSize: 14, color: 'var(--ds-color-text-muted)', marginTop: 6 }}>
-          Move-out date: Jun 30, 2025 · Notice sent to {tenant.name.split(' ')[0]}
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div style={{ margin: '24px 0' }}>
-      <div style={{ background: 'white', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-border)', overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--ds-color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ds-color-text-primary)' }}>Lease Renewal Offer</div>
-            <div style={{ fontSize: 13, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>Offer expires May 31, 2025</div>
-          </div>
-          <span style={{ fontSize: 12, fontWeight: 500, padding: '4px 10px', borderRadius: 'var(--ds-border-radius-full)', background: 'var(--ds-color-warning-subtle)', color: 'var(--ds-color-warning)' }}>
-            Awaiting response
-          </span>
-        </div>
-        <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          {[
-            { label: 'Current lease end', value: tenant.leaseEnd },
-            { label: 'New lease term', value: 'Jul 1, 2025 – Jun 30, 2026' },
-            { label: 'Current monthly rent', value: '$1,450 / mo' },
-            { label: 'Proposed new rate', value: '$1,520 / mo' },
-          ].map(item => (
-            <div key={item.label}>
-              <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginBottom: 4 }}>{item.label}</div>
-              <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ds-color-text-primary)' }}>{item.value}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ margin: '0 20px 20px', padding: '12px 16px', background: 'var(--ds-color-primary-light)', borderRadius: 'var(--ds-border-radius-md)', display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 13, color: 'var(--ds-color-text-primary)' }}>Rate increase</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-color-primary)' }}>+$70 / mo (4.8%)</span>
-        </div>
-        <div style={{ padding: '16px 20px', borderTop: '1px solid var(--ds-color-border)', display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-          <button onClick={() => setDecision('declined')} style={{ padding: '9px 20px', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-border)', background: 'white', color: 'var(--ds-color-text-primary)', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
-            Decline
-          </button>
-          <button onClick={() => setDecision('accepted')} style={{ padding: '9px 20px', borderRadius: 'var(--ds-border-radius-md)', border: 'none', background: 'var(--ds-color-primary)', color: 'white', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
-            Accept Renewal
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // ─── Tenant detail view ───────────────────────────────────────────────────────
 
@@ -328,7 +249,7 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
           </div>
         )}
 
-        {activeTab === 'renewal' && <RenewalTab tenant={tenant} />}
+        {activeTab === 'renewal' && <Placeholder name="RenewalTab" />}
       </div>
     </div>
   )
@@ -356,7 +277,9 @@ function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void 
       <div style={{ marginBottom: 16 }}>
         <MultiUnitBanner status="overdue" unitCount={5} overdueCount={3} totalBalance="$566" />
       </div>
-      <StatsBar />
+      <div style={{ marginBottom: 24 }}>
+        <Placeholder name="StatsBar" />
+      </div>
       <TenantsTable
         tenants={mappedTenants}
         onRowClick={onSelectTenant}

@@ -35,8 +35,12 @@ This keeps prototypes built from real components only — not throwaway custom U
 | `PaymentBanner` | `src/stories/PaymentBanner.tsx` | Payment status strip |
 | `MultiUnitBanner` | `src/stories/MultiUnitBanner.tsx` | Multi-unit status summary |
 | `TenantInfoCard` | `src/stories/TenantInfoCard.tsx` | Collapsible tenant details card |
-| `TenantsTable` | `src/stories/TenantsTable.tsx` | Tenants list with Current/Past tabs |
+| `TenantsTable` | `src/stories/TenantsTable.tsx` | Tenants list with Current/Past tabs, row click |
 | `AccessStatus` | `src/stories/AccessStatus.tsx` | Gate/access status badge |
+| `UnitDetailsCard` | `src/stories/UnitDetailsCard.tsx` | Unit number, status, size, rent cards |
+| `CommunicationsPanel` | `src/stories/CommunicationsPanel.tsx` | Message feed with pinned notes, lock/note/email types |
+| `Navbar` | `src/stories/AppNav.tsx` | Top navbar: logo, facility, search, tasks, avatar |
+| `Sidebar` | `src/stories/AppNav.tsx` | Left nav: collapsible, all nav items, user footer |
 
 ---
 
