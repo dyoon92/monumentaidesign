@@ -105,7 +105,7 @@ const CheckboxIcon = ({ checked, indeterminate = false, onChange }: { checked: b
           <path d="M4.5 8h7" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
         </>
       ) : (
-        <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" stroke="rgba(22,22,22,0.8)" strokeWidth="1" fill="none" />
+        <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" stroke="var(--ds-color-text-muted)" strokeWidth="1" fill="none" />
       )}
     </svg>
   </div>
@@ -114,14 +114,14 @@ const CheckboxIcon = ({ checked, indeterminate = false, onChange }: { checked: b
 // Icons matching Figma node 8107-74197
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="7" cy="7" r="5" stroke="rgba(22,22,22,0.6)" strokeWidth="1.4" />
-    <path d="M11 11l3 3" stroke="rgba(22,22,22,0.6)" strokeWidth="1.4" strokeLinecap="round" />
+    <circle cx="7" cy="7" r="5" stroke="var(--ds-color-text-muted)" strokeWidth="1.4" />
+    <path d="M11 11l3 3" stroke="var(--ds-color-text-muted)" strokeWidth="1.4" strokeLinecap="round" />
   </svg>
 )
 
 const FilterListIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M2 4h12M4 8h8M6 12h4" stroke="rgba(22,22,22,0.8)" strokeWidth="1.4" strokeLinecap="round" />
+    <path d="M2 4h12M4 8h8M6 12h4" stroke="var(--ds-color-text-muted)" strokeWidth="1.4" strokeLinecap="round" />
   </svg>
 )
 
