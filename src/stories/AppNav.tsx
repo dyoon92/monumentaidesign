@@ -113,6 +113,113 @@ const LogoutIcon = () => (
   </svg>
 )
 
+const CallsIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M3.5 2h2.6l1.1 2.8-1.6 1a9 9 0 004.6 4.6l1-1.6 2.8 1.1v2.6a1 1 0 01-1 1C5.7 13.5 2.5 10.3 2.5 3.5a1 1 0 011-1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+  </svg>
+)
+
+const ChevronLeftSmallIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M9 3L5 7l4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const SubArrowIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: 0.6 }}>
+    <path d="M3 3v5a2 2 0 002 2h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 8l2 2-2 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const UsersIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <circle cx="6" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M1 13.5c0-2.485 2.239-4.5 5-4.5s5 2.015 5 4.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    <path d="M11.5 7.5c1.38 0 2.5 1.12 2.5 2.5v2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    <path d="M13.5 5a1.5 1.5 0 110 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+  </svg>
+)
+
+const BuildingIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M5 14V9h6v5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M2 7h12" stroke="currentColor" strokeWidth="1.3"/>
+    <rect x="5" y="4" width="2" height="2" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+    <rect x="9" y="4" width="2" height="2" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+  </svg>
+)
+
+const DoorIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <rect x="3.5" y="2" width="9" height="13" rx="1" stroke="currentColor" strokeWidth="1.3"/>
+    <circle cx="10.5" cy="8.5" r="0.75" fill="currentColor"/>
+    <path d="M3.5 15h9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+  </svg>
+)
+
+const ShieldIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M8 2L3 4.5v4C3 11.5 5.5 14 8 14.5c2.5-.5 5-3 5-6V4.5L8 2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M5.5 8l2 2 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const DocIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M4 2h5.5L12 4.5V14a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M9 2v3h3" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M5.5 8h5M5.5 10.5h3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+  </svg>
+)
+
+const BoltIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M9.5 2L4 9h4.5L6.5 14 13 7H8.5L9.5 2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+  </svg>
+)
+
+const TagIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M2 2h5.5l6.5 6.5-5.5 5.5L2 7.5V2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <circle cx="5.5" cy="5.5" r="1" fill="currentColor"/>
+  </svg>
+)
+
+const TemplateIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <rect x="2" y="2" width="12" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M2 6h12" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M7 6v8" stroke="currentColor" strokeWidth="1.3"/>
+  </svg>
+)
+
+const FormIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <rect x="2" y="2" width="12" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M5 6h6M5 9h6M5 12h4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+  </svg>
+)
+
+const StorefrontIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M2 6.5L3.5 2h9L14 6.5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M2 6.5c0 1.1.9 2 2 2s2-.9 2-2 .9 2 2 2 2-.9 2-2 .9 2 2 2 2-.9 2-2" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M3 8.5V14h10V8.5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <rect x="6" y="10" width="4" height="4" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+  </svg>
+)
+
+const SlidersIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    <circle cx="5" cy="4" r="1.5" fill="var(--ds-color-surface)" stroke="currentColor" strokeWidth="1.3"/>
+    <circle cx="10" cy="8" r="1.5" fill="var(--ds-color-surface)" stroke="currentColor" strokeWidth="1.3"/>
+    <circle cx="6" cy="12" r="1.5" fill="var(--ds-color-surface)" stroke="currentColor" strokeWidth="1.3"/>
+  </svg>
+)
+
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
     <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.3"/>
@@ -143,7 +250,7 @@ const ChevronDownIcon = () => (
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type NavId = 'dashboard' | 'units' | 'tenants' | 'leads' | 'communications' | 'delinquencies' | 'revenue' | 'insights' | 'reports' | 'billing' | 'settings'
+export type NavId = 'dashboard' | 'units' | 'tenants' | 'leads' | 'communications' | 'calls' | 'delinquencies' | 'revenue' | 'insights' | 'reports' | 'billing' | 'settings'
 
 export interface AppNavProps {
   activeNav?: NavId
@@ -158,19 +265,36 @@ export interface AppNavProps {
 
 const NAV_ITEMS: { id: NavId; label: string; icon: React.ReactNode }[] = [
   { id: 'dashboard',       label: 'Dashboard',       icon: <DashboardIcon /> },
-  { id: 'units',           label: 'Units',           icon: <UnitsIcon /> },
-  { id: 'tenants',         label: 'Tenants',         icon: <TenantsIcon /> },
-  { id: 'leads',           label: 'Leads',           icon: <LeadsIcon /> },
-  { id: 'communications',  label: 'Communications',  icon: <CommunicationsIcon /> },
-  { id: 'delinquencies',   label: 'Delinquencies',   icon: <DelinquenciesIcon /> },
-  { id: 'revenue',         label: 'Revenue',         icon: <RevenueIcon /> },
-  { id: 'insights',        label: 'Insights',        icon: <InsightsIcon /> },
-  { id: 'reports',         label: 'Reports',         icon: <ReportsIcon /> },
-  { id: 'billing',         label: 'Billing',         icon: <BillingIcon /> },
+  { id: 'units',           label: 'Units',            icon: <UnitsIcon /> },
+  { id: 'tenants',         label: 'Tenants',          icon: <TenantsIcon /> },
+  { id: 'leads',           label: 'Leads',            icon: <LeadsIcon /> },
+  { id: 'communications',  label: 'Communications',   icon: <CommunicationsIcon /> },
+  { id: 'calls',           label: 'Calls',            icon: <CallsIcon /> },
+  { id: 'delinquencies',   label: 'Delinquencies',    icon: <DelinquenciesIcon /> },
+  { id: 'insights',        label: 'Insights',         icon: <InsightsIcon /> },
+  { id: 'reports',         label: 'Reports',          icon: <ReportsIcon /> },
+  { id: 'billing',         label: 'Billing',          icon: <BillingIcon /> },
 ]
 
-const BOTTOM_ITEMS: { id: NavId; label: string; icon: React.ReactNode }[] = [
-  { id: 'settings', label: 'Settings', icon: <SettingsIcon /> },
+// Settings sub-nav items
+const SETTINGS_ITEMS: { label: string; icon?: React.ReactNode; indent?: number }[] = [
+  { label: 'Portfolio Configurations', icon: <SlidersIcon /> },
+  { label: 'Users & Permissions',      icon: <UsersIcon /> },
+  { label: 'Facility Management',      icon: <BuildingIcon /> },
+  { label: 'Call Center Setup',        icon: <CallsIcon /> },
+  { label: 'Phone Numbers',            icon: <SubArrowIcon />, indent: 1 },
+  { label: 'Ring Groups',              indent: 2 },
+  { label: 'Routing Rules',            indent: 2 },
+  { label: 'Access Management',        icon: <DoorIcon /> },
+  { label: 'Coverage Management',      icon: <ShieldIcon /> },
+  { label: 'Document Management',      icon: <DocIcon /> },
+  { label: 'Unit Types Management',    icon: <UnitsIcon /> },
+  { label: 'Billing & Taxes',          icon: <BillingIcon /> },
+  { label: 'Automation Rules',         icon: <BoltIcon /> },
+  { label: 'Rate Plans',               icon: <TagIcon /> },
+  { label: 'Template Library',         icon: <TemplateIcon /> },
+  { label: 'Rental Form Builder',      icon: <FormIcon /> },
+  { label: 'My Storefront',            icon: <StorefrontIcon /> },
 ]
 
 // ─── Navbar (top bar) ─────────────────────────────────────────────────────────
@@ -328,6 +452,126 @@ export const Navbar: React.FC<Pick<AppNavProps, 'facilityName' | 'userName' | 't
   )
 }
 
+// ─── Shared nav item button ────────────────────────────────────────────────────
+
+const navItemStyle = (active: boolean): React.CSSProperties => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  width: '100%',
+  padding: '10px 12px',
+  borderRadius: 8,
+  border: 'none',
+  background: active ? 'var(--ds-color-primary-light)' : 'transparent',
+  color: active ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
+  fontSize: 14,
+  fontWeight: active ? 600 : 400,
+  cursor: 'pointer',
+  textAlign: 'left',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  fontFamily: 'Inter, sans-serif',
+  flexShrink: 0,
+  boxSizing: 'border-box',
+})
+
+// ─── Footer ────────────────────────────────────────────────────────────────────
+
+const SidebarFooter = ({ userName, userEmail, collapsed }: { userName: string; userEmail: string; collapsed: boolean }) => (
+  <div style={{
+    padding: '8px 16px',
+    borderTop: '1px solid var(--ds-color-border)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    overflow: 'hidden',
+    flexShrink: 0,
+  }}>
+    <div style={{ position: 'relative', flexShrink: 0 }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: '50%',
+        background: 'var(--ds-color-primary)', color: 'white',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 12, fontWeight: 600,
+      }}>
+        {userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+      </div>
+      <span style={{
+        position: 'absolute', bottom: 0, right: 0,
+        width: 8, height: 8, borderRadius: '50%',
+        background: 'var(--ds-color-success)',
+        border: '1.5px solid var(--ds-color-surface)',
+      }} />
+    </div>
+    {!collapsed && (
+      <div style={{ overflow: 'hidden', flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ds-color-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{userName}</div>
+        <div style={{ fontSize: 12, fontWeight: 400, color: 'var(--ds-color-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', opacity: 0.8 }}>{userEmail}</div>
+      </div>
+    )}
+  </div>
+)
+
+// ─── Settings sub-nav ──────────────────────────────────────────────────────────
+
+const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: boolean }) => {
+  const [activeItem, setActiveItem] = useState('Phone Numbers')
+  return (
+    <>
+      {/* Back button */}
+      <div style={{ padding: '24px 16px 12px', flexShrink: 0 }}>
+        <button
+          onClick={onBack}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            padding: '4px 10px', borderRadius: 8,
+            border: '1px solid #cbd2e1',
+            background: 'transparent',
+            cursor: 'pointer',
+            fontSize: 12, fontWeight: 500,
+            color: 'var(--ds-color-text-primary)',
+            fontFamily: 'Inter, sans-serif',
+          }}
+        >
+          <ChevronLeftSmallIcon />
+          {!collapsed && 'Back'}
+        </button>
+      </div>
+
+      {/* "Settings" header */}
+      {!collapsed && (
+        <div style={{ padding: '12px 16px 14px', flexShrink: 0 }}>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ds-color-text-primary)', fontFamily: 'Inter, sans-serif' }}>Settings</span>
+        </div>
+      )}
+
+      {/* Sub-nav items */}
+      <nav style={{ flex: 1, padding: '0 8px 12px', display: 'flex', flexDirection: 'column', gap: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+        {SETTINGS_ITEMS.map((item) => {
+          const active = activeItem === item.label
+          const paddingLeft = item.indent === 2 ? 44 : item.indent === 1 ? 18 : 12
+          return (
+            <button
+              key={item.label}
+              onClick={() => setActiveItem(item.label)}
+              title={collapsed ? item.label : undefined}
+              style={{
+                ...navItemStyle(active),
+                padding: `10px 12px 10px ${paddingLeft}px`,
+                gap: item.indent === 1 ? 6 : 12,
+              }}
+            >
+              {item.icon && <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>}
+              {!item.icon && !collapsed && <span style={{ width: 16, flexShrink: 0 }} />}
+              {!collapsed && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
+            </button>
+          )
+        })}
+      </nav>
+    </>
+  )
+}
+
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
 export const Sidebar: React.FC<AppNavProps> = ({
@@ -337,6 +581,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
   userEmail = 'dave@monumentai.com',
 }) => {
   const [collapsed, setCollapsed] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
   const width = collapsed ? 56 : 240
 
   return (
@@ -348,26 +593,21 @@ export const Sidebar: React.FC<AppNavProps> = ({
       fontFamily: 'Inter, sans-serif',
       position: 'relative',
     }}>
-      {/* Edge collapse toggle — circle straddling the sidebar border */}
+      {/* Edge collapse toggle */}
       <button
         onClick={() => setCollapsed(v => !v)}
         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         style={{
           position: 'absolute',
-          right: -12,
-          top: 9,
-          width: 24,
-          height: 24,
+          right: -12, top: 9,
+          width: 24, height: 24,
           borderRadius: '50%',
           background: 'var(--ds-color-surface)',
           border: '1px solid var(--ds-color-border)',
           cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: 'var(--ds-color-text-muted)',
-          zIndex: 10,
-          flexShrink: 0,
+          zIndex: 10, flexShrink: 0,
           boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
         }}
       >
@@ -376,146 +616,59 @@ export const Sidebar: React.FC<AppNavProps> = ({
         </svg>
       </button>
 
-      {/* Inner container handles overflow clipping during collapse animation */}
+      {/* Inner container — handles overflow clipping during collapse */}
       <div style={{
-        width: '100%',
-        height: '100%',
+        width: '100%', height: '100%',
         overflow: 'hidden',
         background: 'var(--ds-color-surface)',
         borderRight: '1px solid var(--ds-color-border)',
-        display: 'flex',
-        flexDirection: 'column',
+        display: 'flex', flexDirection: 'column',
       }}>
+        {showSettings ? (
+          <SettingsSubNav onBack={() => setShowSettings(false)} collapsed={collapsed} />
+        ) : (
+          <>
+            {/* Main nav */}
+            <nav style={{ flex: 1, padding: '16px 8px 8px', display: 'flex', flexDirection: 'column', gap: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+              {NAV_ITEMS.map(item => {
+                const active = activeNav === item.id
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onNav?.(item.id)}
+                    title={collapsed ? item.label : undefined}
+                    style={navItemStyle(active)}
+                  >
+                    <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>
+                    {!collapsed && item.label}
+                  </button>
+                )
+              })}
+            </nav>
 
-      {/* Main nav items */}
-      <nav style={{ flex: 1, padding: '4px 8px 12px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto', overflowX: 'hidden' }}>
-        {NAV_ITEMS.map(item => {
-          const active = activeNav === item.id
-          return (
-            <button
-              key={item.id}
-              onClick={() => onNav?.(item.id)}
-              title={collapsed ? item.label : undefined}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                width: '100%',
-                padding: '9px 12px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: 'none',
-                background: active ? 'var(--ds-color-primary-light)' : 'transparent',
-                color: active ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
-                fontSize: 13,
-                fontWeight: active ? 600 : 400,
-                cursor: 'pointer',
-                textAlign: 'left',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                fontFamily: 'Inter, sans-serif',
-                flexShrink: 0,
-              }}
-            >
-              <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>
-              {!collapsed && item.label}
-            </button>
-          )
-        })}
-      </nav>
-
-      {/* Bottom items */}
-      <div style={{ padding: '8px 8px 0', display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {BOTTOM_ITEMS.map(item => {
-          const active = activeNav === item.id
-          return (
-            <button
-              key={item.id}
-              onClick={() => onNav?.(item.id)}
-              title={collapsed ? item.label : undefined}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                width: '100%',
-                padding: '9px 12px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: 'none',
-                background: active ? 'var(--ds-color-primary-light)' : 'transparent',
-                color: active ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
-                fontSize: 13,
-                fontWeight: active ? 600 : 400,
-                cursor: 'pointer',
-                textAlign: 'left',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                fontFamily: 'Inter, sans-serif',
-              }}
-            >
-              <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>
-              {!collapsed && item.label}
-            </button>
-          )
-        })}
-
-        {/* Logout */}
-        <button
-          title={collapsed ? 'Logout' : undefined}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            width: '100%',
-            padding: '9px 12px',
-            borderRadius: 'var(--ds-border-radius-md)',
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--ds-color-text-muted)',
-            fontSize: 13,
-            cursor: 'pointer',
-            textAlign: 'left',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            fontFamily: 'Inter, sans-serif',
-          }}
-        >
-          <span style={{ flexShrink: 0, display: 'flex' }}><LogoutIcon /></span>
-          {!collapsed && 'Logout'}
-        </button>
-      </div>
-
-      {/* User footer */}
-      <div style={{
-        padding: '12px 12px',
-        borderTop: '1px solid var(--ds-color-border)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          width: 32,
-          height: 32,
-          borderRadius: '50%',
-          background: 'var(--ds-color-primary)',
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 12,
-          fontWeight: 600,
-          flexShrink: 0,
-        }}>
-          {userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-        </div>
-        {!collapsed && (
-          <div style={{ overflow: 'hidden' }}>
-            <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ds-color-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{userName}</div>
-            <div style={{ fontSize: 11, color: 'var(--ds-color-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{userEmail}</div>
-          </div>
+            {/* Bottom: Settings + Logout */}
+            <div style={{ padding: '8px 8px 0', display: 'flex', flexDirection: 'column', gap: 0 }}>
+              <button
+                onClick={() => setShowSettings(true)}
+                title={collapsed ? 'Settings' : undefined}
+                style={navItemStyle(activeNav === 'settings')}
+              >
+                <span style={{ flexShrink: 0, display: 'flex' }}><SettingsIcon /></span>
+                {!collapsed && 'Settings'}
+              </button>
+              <button
+                title={collapsed ? 'Logout' : undefined}
+                style={navItemStyle(false)}
+              >
+                <span style={{ flexShrink: 0, display: 'flex' }}><LogoutIcon /></span>
+                {!collapsed && 'Logout'}
+              </button>
+            </div>
+          </>
         )}
-      </div>
 
-      </div>{/* end inner overflow container */}
+        <SidebarFooter userName={userName} userEmail={userEmail} collapsed={collapsed} />
+      </div>
     </aside>
   )
 }
