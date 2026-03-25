@@ -166,7 +166,7 @@ const FollowUpWithLeadDetail = ({ onBack }: { onBack: () => void }) => {
             onClick={onBack}
             style={{
               width: 28, height: 28,
-              background: '#f0f2f8',
+              background: 'var(--ds-color-surface-muted)',
               border: 'none',
               borderRadius: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -213,7 +213,7 @@ const FollowUpWithLeadDetail = ({ onBack }: { onBack: () => void }) => {
               }}
               style={{
                 width: 28, height: 28,
-                background: '#f0f2f8',
+                background: 'var(--ds-color-surface-muted)',
                 border: 'none',
                 borderRadius: 8,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -229,7 +229,7 @@ const FollowUpWithLeadDetail = ({ onBack }: { onBack: () => void }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <button style={{
                   background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                  fontSize: 14, fontWeight: 500, color: '#7d52f7',
+                  fontSize: 14, fontWeight: 500, color: 'var(--ds-color-primary)',
                   fontFamily: 'Inter, sans-serif', textAlign: 'left',
                 }}>
                   {lead.name}
@@ -238,7 +238,7 @@ const FollowUpWithLeadDetail = ({ onBack }: { onBack: () => void }) => {
                   {lead.overdue}
                 </span>
               </div>
-              <div style={{ fontSize: 12, fontWeight: 500, color: '#161616', fontFamily: 'Inter, sans-serif' }}>
+              <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--ds-color-text-primary)', fontFamily: 'Inter, sans-serif' }}>
                 {lead.facility}
               </div>
             </div>
