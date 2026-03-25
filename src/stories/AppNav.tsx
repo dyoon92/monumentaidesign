@@ -355,7 +355,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
         style={{
           position: 'absolute',
           right: -12,
-          top: 20,
+          top: 9,
           width: 24,
           height: 24,
           borderRadius: '50%',
