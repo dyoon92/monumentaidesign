@@ -101,8 +101,8 @@ const BillingIcon = () => (
 
 const SettingsIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M6.5 2l-.5 1.5a5 5 0 00-1.2.7L3.2 3.7 1.7 6.3l1.3 1a5 5 0 000 1.4l-1.3 1 1.5 2.6 1.6-.5a5 5 0 001.2.7L6.5 14h3l.5-1.5a5 5 0 001.2-.7l1.6.5 1.5-2.6-1.3-1a5 5 0 000-1.4l1.3-1L12 3.7l-1.6.5A5 5 0 009.2 3.5L8.5 2h-2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
     <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.3"/>
-    <path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M3.4 12.6l.7-.7M11.9 4.1l.7-.7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
   </svg>
 )
 
@@ -560,7 +560,7 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
       )}
 
       {/* Sub-nav items */}
-      <nav style={{ flex: 1, padding: '0 8px 12px', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden' }}>
+      <nav style={{ flex: 1, padding: '0 8px 12px', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', overflowX: 'hidden' }}>
         {SETTINGS_ITEMS.map((item) => {
           const active = activeItem === item.label
           const isExpanded = expanded.has(item.label)
@@ -669,7 +669,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
         ) : (
           <>
             {/* Main nav */}
-            <nav style={{ flex: 1, padding: '16px 8px 8px', display: 'flex', flexDirection: 'column', gap: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+            <nav style={{ flex: 1, padding: '16px 8px 8px', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', overflowX: 'hidden' }}>
               {NAV_ITEMS.map(item => {
                 const active = activeNav === item.id
                 return (
@@ -687,7 +687,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
             </nav>
 
             {/* Bottom: Settings + Logout */}
-            <div style={{ padding: '8px 8px 0', display: 'flex', flexDirection: 'column', gap: 0 }}>
+            <div style={{ padding: '8px 8px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <button
                 onClick={() => setShowSettings(true)}
                 title={collapsed ? 'Settings' : undefined}
