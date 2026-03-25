@@ -460,26 +460,59 @@ export const Navbar: React.FC<Pick<AppNavProps, 'facilityName' | 'userName' | 't
 
 // ─── Shared nav item button ────────────────────────────────────────────────────
 
-const navItemStyle = (active: boolean): React.CSSProperties => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-  width: '100%',
-  padding: '10px 12px',
-  borderRadius: 8,
-  border: 'none',
-  background: active ? 'var(--ds-color-primary-light)' : 'transparent',
-  color: active ? 'var(--ds-color-primary)' : 'color-mix(in srgb, var(--ds-color-text-primary) 80%, transparent)',
-  fontSize: 14,
-  fontWeight: active ? 600 : 400,
-  cursor: 'pointer',
-  textAlign: 'left',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  fontFamily: 'Inter, sans-serif',
-  flexShrink: 0,
-  boxSizing: 'border-box',
-})
+const NavButton = ({
+  active = false,
+  onClick,
+  title,
+  style,
+  children,
+}: {
+  active?: boolean
+  onClick?: () => void
+  title?: string
+  style?: React.CSSProperties
+  children: React.ReactNode
+}) => {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        width: '100%',
+        padding: '10px 12px',
+        borderRadius: 8,
+        border: 'none',
+        background: active
+          ? 'var(--ds-color-primary-light)'
+          : hovered
+          ? 'var(--ds-color-color-1)'
+          : 'transparent',
+        color: active
+          ? 'var(--ds-color-primary)'
+          : 'color-mix(in srgb, var(--ds-color-text-primary) 80%, transparent)',
+        fontSize: 14,
+        fontWeight: active ? 600 : 400,
+        cursor: 'pointer',
+        textAlign: 'left',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        fontFamily: 'Inter, sans-serif',
+        flexShrink: 0,
+        boxSizing: 'border-box',
+        transition: 'background 0.1s',
+        ...style,
+      }}
+    >
+      {children}
+    </button>
+  )
+}
 
 // ─── Footer ────────────────────────────────────────────────────────────────────
 
@@ -568,17 +601,11 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
 
           return (
             <React.Fragment key={item.label}>
-              <button
-                onClick={() => {
-                  if (item.expandable) toggle(item.label)
-                  else setActiveItem(item.label)
-                }}
+              <NavButton
+                active={active}
+                onClick={() => { if (item.expandable) toggle(item.label); else setActiveItem(item.label) }}
                 title={collapsed ? item.label : undefined}
-                style={{
-                  ...navItemStyle(active),
-                  padding: `10px 12px 10px ${paddingLeft}px`,
-                  gap: item.indent === 1 ? 6 : 12,
-                }}
+                style={{ padding: `10px 12px 10px ${paddingLeft}px`, gap: item.indent === 1 ? 6 : 12 }}
               >
                 {item.icon && <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>}
                 {!item.icon && !collapsed && <span style={{ width: 16, flexShrink: 0 }} />}
@@ -588,21 +615,19 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
                     <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 )}
-              </button>
+              </NavButton>
 
               {/* Children — only shown when expanded */}
               {item.expandable && isExpanded && item.children?.map(child => (
-                <button
+                <NavButton
                   key={child.label}
+                  active={activeItem === child.label}
                   onClick={() => setActiveItem(child.label)}
                   title={collapsed ? child.label : undefined}
-                  style={{
-                    ...navItemStyle(activeItem === child.label),
-                    padding: '10px 12px 10px 44px',
-                  }}
+                  style={{ padding: '10px 12px 10px 44px' }}
                 >
                   {!collapsed && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{child.label}</span>}
-                </button>
+                </NavButton>
               ))}
             </React.Fragment>
           )
@@ -673,36 +698,33 @@ export const Sidebar: React.FC<AppNavProps> = ({
               {NAV_ITEMS.map(item => {
                 const active = activeNav === item.id
                 return (
-                  <button
+                  <NavButton
                     key={item.id}
+                    active={active}
                     onClick={() => onNav?.(item.id)}
                     title={collapsed ? item.label : undefined}
-                    style={navItemStyle(active)}
                   >
                     <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>
                     {!collapsed && item.label}
-                  </button>
+                  </NavButton>
                 )
               })}
             </nav>
 
             {/* Bottom: Settings + Logout */}
             <div style={{ padding: '8px 8px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <button
+              <NavButton
+                active={activeNav === 'settings'}
                 onClick={() => setShowSettings(true)}
                 title={collapsed ? 'Settings' : undefined}
-                style={navItemStyle(activeNav === 'settings')}
               >
                 <span style={{ flexShrink: 0, display: 'flex' }}><SettingsIcon /></span>
                 {!collapsed && 'Settings'}
-              </button>
-              <button
-                title={collapsed ? 'Logout' : undefined}
-                style={navItemStyle(false)}
-              >
+              </NavButton>
+              <NavButton title={collapsed ? 'Logout' : undefined}>
                 <span style={{ flexShrink: 0, display: 'flex' }}><LogoutIcon /></span>
                 {!collapsed && 'Logout'}
-              </button>
+              </NavButton>
             </div>
           </>
         )}
