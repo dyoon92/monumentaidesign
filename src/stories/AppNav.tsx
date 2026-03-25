@@ -343,39 +343,49 @@ export const Sidebar: React.FC<AppNavProps> = ({
     <aside style={{
       width,
       height: '100%',
-      background: 'var(--ds-color-surface)',
-      borderRight: '1px solid var(--ds-color-border)',
-      display: 'flex',
-      flexDirection: 'column',
       flexShrink: 0,
       transition: 'width 0.2s ease',
       fontFamily: 'Inter, sans-serif',
-      overflow: 'hidden',
+      position: 'relative',
     }}>
-      {/* Collapse toggle row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-end', padding: '10px 8px 4px', flexShrink: 0 }}>
-        <button
-          onClick={() => setCollapsed(v => !v)}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: 'var(--ds-border-radius-md)',
-            background: 'var(--ds-color-surface-muted)',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--ds-color-text-muted)',
-            flexShrink: 0,
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
-            <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      </div>
+      {/* Edge collapse toggle — circle straddling the sidebar border */}
+      <button
+        onClick={() => setCollapsed(v => !v)}
+        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        style={{
+          position: 'absolute',
+          right: -12,
+          top: 20,
+          width: 24,
+          height: 24,
+          borderRadius: '50%',
+          background: 'var(--ds-color-surface)',
+          border: '1px solid var(--ds-color-border)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--ds-color-text-muted)',
+          zIndex: 10,
+          flexShrink: 0,
+          boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+        }}
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
+          <path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Inner container handles overflow clipping during collapse animation */}
+      <div style={{
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        background: 'var(--ds-color-surface)',
+        borderRight: '1px solid var(--ds-color-border)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
 
       {/* Main nav items */}
       <nav style={{ flex: 1, padding: '4px 8px 12px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto', overflowX: 'hidden' }}>
@@ -505,6 +515,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
         )}
       </div>
 
+      </div>{/* end inner overflow container */}
     </aside>
   )
 }
