@@ -92,7 +92,7 @@ const HoverRow = ({ children, onClick }: { children: React.ReactNode; onClick?: 
       style={{
         margin: '0 -20px',
         padding: '0 20px',
-        background: hovered ? '#f8f9fc' : 'transparent',
+        background: hovered ? 'var(--ds-color-color-4)' : 'transparent',
         cursor: onClick ? 'pointer' : 'default',
         transition: 'background 0.1s',
         borderRadius: 4,
@@ -198,7 +198,7 @@ const FollowUpWithLeadDetail = ({ onBack }: { onBack: () => void }) => {
               padding: '8px 12px',
               minHeight: 62,
               boxSizing: 'border-box',
-              background: hoveredRow === i ? '#f8f9fc' : 'transparent',
+              background: hoveredRow === i ? 'var(--ds-color-color-4)' : 'transparent',
               borderTop: i > 0 ? '1px solid #e1e5ef' : 'none',
               cursor: 'pointer',
               transition: 'background 0.1s',
