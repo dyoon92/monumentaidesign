@@ -1,4 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth)
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+  return width
+}
 
 // ─── Monument Logo ─────────────────────────────────────────────────────────────
 
@@ -165,14 +175,18 @@ const BOTTOM_ITEMS: { id: NavId; label: string; icon: React.ReactNode }[] = [
 
 // ─── Navbar (top bar) ─────────────────────────────────────────────────────────
 
-export const Navbar: React.FC<Pick<AppNavProps, 'facilityName' | 'userName' | 'tasksCount'>> = ({
+export const Navbar: React.FC<Pick<AppNavProps, 'facilityName' | 'userName' | 'tasksCount'> & { darkMode?: boolean; onToggleDarkMode?: () => void }> = ({
   facilityName = 'Sunrise Self Storage',
   userName = 'DY',
   tasksCount = 0,
-}) => (
+  darkMode = false,
+  onToggleDarkMode,
+}) => {
+  const isMobile = useWindowWidth() < 768
+  return (
   <div style={{
     height: 64,
-    background: 'white',
+    background: 'var(--ds-color-surface)',
     borderBottom: '1px solid var(--ds-color-border)',
     display: 'flex',
     alignItems: 'center',
@@ -210,26 +224,50 @@ export const Navbar: React.FC<Pick<AppNavProps, 'facilityName' | 'userName' | 't
     </button>
 
     {/* Search */}
-    <div style={{
-      flex: 1,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8,
-      background: 'var(--ds-color-surface-muted)',
-      borderRadius: 'var(--ds-border-radius-md)',
-      padding: '8px 12px',
-      maxWidth: 560,
-    }}>
-      <span style={{ color: 'var(--ds-color-text-muted)', display: 'flex' }}><SearchIcon /></span>
-      <span style={{ fontSize: 13, color: 'var(--ds-color-text-muted)' }}>
-        Search units, tenants, leads, invoices, or phone numbers...
-      </span>
-    </div>
+    {isMobile ? (
+      <button style={{ width: 32, height: 32, borderRadius: 'var(--ds-border-radius-md)', background: 'var(--ds-color-surface-muted)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ds-color-text-primary)', flexShrink: 0 }}>
+        <SearchIcon />
+      </button>
+    ) : (
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        background: 'var(--ds-color-surface-muted)',
+        borderRadius: 40,
+        padding: '8px 12px',
+        maxWidth: 560,
+      }}>
+        <span style={{ color: 'var(--ds-color-text-muted)', display: 'flex' }}><SearchIcon /></span>
+        <span style={{ fontSize: 13, color: 'var(--ds-color-text-muted)' }}>
+          Search units, tenants, leads, invoices, or phone numbers...
+        </span>
+      </div>
+    )}
 
     <div style={{ flex: 1 }} />
 
     {/* Quick actions */}
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      {/* Dark mode toggle */}
+      <button
+        onClick={onToggleDarkMode}
+        title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        style={{ width: 32, height: 32, borderRadius: 'var(--ds-border-radius-md)', background: 'var(--ds-color-surface-muted)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ds-color-text-primary)' }}
+      >
+        {darkMode ? (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.3"/>
+            <path d="M8 1.5V3M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1.06 1.06M11.54 11.54l1.06 1.06M3.4 12.6l1.06-1.06M11.54 4.46l1.06-1.06" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M14 8.53A6 6 0 117.47 2 4.5 4.5 0 0014 8.53z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+          </svg>
+        )}
+      </button>
+
       <button style={{ width: 32, height: 32, borderRadius: 'var(--ds-border-radius-md)', background: 'var(--ds-color-surface-muted)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ds-color-text-primary)' }}>
         <AddUserIcon />
       </button>
@@ -282,12 +320,13 @@ export const Navbar: React.FC<Pick<AppNavProps, 'facilityName' | 'userName' | 't
           height: 8,
           borderRadius: '50%',
           background: 'var(--ds-color-success)',
-          border: '1.5px solid white',
+          border: '1.5px solid var(--ds-color-surface)',
         }} />
       </div>
     </div>
   </div>
-)
+  )
+}
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
@@ -304,7 +343,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
     <aside style={{
       width,
       height: '100%',
-      background: 'white',
+      background: 'var(--ds-color-surface)',
       borderRight: '1px solid var(--ds-color-border)',
       display: 'flex',
       flexDirection: 'column',

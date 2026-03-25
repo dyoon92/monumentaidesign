@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Badge, UnitBadge } from './Badge'
+import { Dropdown } from './Dropdown'
+import { Modal } from './Modal'
+import { Toast } from './Toast'
 
 export interface TenantPageHeaderProps {
   name: string
@@ -75,48 +79,25 @@ const CloseCircleIcon = () => (
   </svg>
 )
 
+const MoreVerticalIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <circle cx="8" cy="4" r="1.2" fill="currentColor" />
+    <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+    <circle cx="8" cy="12" r="1.2" fill="currentColor" />
+  </svg>
+)
+
+const ShieldCheckIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M8 2L3 4.5v3.5c0 2.8 2.2 5 5 5.8 2.8-.8 5-3 5-5.8V4.5L8 2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+    <path d="M5.5 8l2 2 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 const Divider = () => (
   <span style={{ color: 'var(--ds-color-border)', userSelect: 'none', fontSize: 16 }}>|</span>
 )
 
-// ─── Badge pill ───────────────────────────────────────────────────────────────
-
-function BadgePill({ label, color, bg, onDismiss }: {
-  label: string
-  color: string
-  bg: string
-  onDismiss?: () => void
-}) {
-  return (
-    <span style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 4,
-      background: bg,
-      color,
-      fontSize: 12,
-      fontWeight: 500,
-      borderRadius: 999,
-      padding: '3px 8px',
-      border: `1px solid ${color}33`,
-    }}>
-      {label}
-      {onDismiss && (
-        <button onClick={onDismiss} style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 0,
-          color,
-          display: 'flex',
-          alignItems: 'center',
-          lineHeight: 1,
-          fontSize: 13,
-        }}>×</button>
-      )}
-    </span>
-  )
-}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -144,164 +125,214 @@ export const TenantPageHeader: React.FC<TenantPageHeaderProps> = ({
   hideTabs = false,
   tabCounts,
   onBack,
-  onTransfer,
-  onMoveOut,
   onTabChange,
 }) => {
-  const btnStyle: React.CSSProperties = {
-    fontFamily: 'Inter, sans-serif',
-    fontSize: 12,
-    fontWeight: 500,
-    cursor: 'pointer',
-    borderRadius: 6,
-    padding: '6px 12px',
-    border: '1px solid var(--ds-color-border)',
-    background: 'white',
-    color: 'var(--ds-color-text-primary)',
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [taxExempt, setTaxExempt] = useState(false)
+  const [toastOpen, setToastOpen] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+
+  const handleExemptClick = () => {
+    setDropdownOpen(false)
+    setModalOpen(true)
   }
 
+  const handleRemoveExemptClick = () => {
+    setDropdownOpen(false)
+    setTaxExempt(false)
+    setToastMessage('Tax exemption removed.')
+    setToastOpen(true)
+  }
+
+  const handleModalConfirm = () => {
+    setModalOpen(false)
+    setTaxExempt(true)
+    setToastMessage('Tax exemption applied successfully.')
+    setToastOpen(true)
+  }
+
+  const dropdownItems = taxExempt
+    ? [{ label: 'Remove tax exemption', icon: <ShieldCheckIcon />, onClick: handleRemoveExemptClick }]
+    : [{ label: 'Exempt from tax', icon: <ShieldCheckIcon />, onClick: handleExemptClick }]
+
   return (
-    <div style={{ background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
+    <>
+      <div style={{ background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
 
-      {/* ── Row 1: back · avatar · name + badges · actions ── */}
-      <div style={{ padding: '16px 24px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* ── Row 1: back · avatar · name + badges · kebab ── */}
+        <div style={{ padding: '16px 24px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
-        {/* Left */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {/* Back */}
-          <button onClick={onBack} style={{ width: 36, height: 36, borderRadius: 8, background: 'var(--ds-color-surface-muted)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <BackIcon />
-          </button>
+          {/* Left */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button onClick={onBack} style={{ width: 36, height: 36, borderRadius: 8, background: 'var(--ds-color-surface-muted)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <BackIcon />
+            </button>
 
-          {/* Avatar */}
-          <PersonIcon />
+            <PersonIcon />
 
-          {/* Name + inline badges */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 28, fontWeight: 700, color: 'var(--ds-color-text-primary)', lineHeight: 1 }}>
-              {name}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 28, fontWeight: 700, color: 'var(--ds-color-text-primary)', lineHeight: 1 }}>
+                {name}
+              </span>
 
-            {unitStatus === 'overdue' && (
-              <BadgePill label="Overdue" color="var(--ds-color-error)" bg="var(--ds-color-error-light)" />
-            )}
-            {unitStatus === 'move-out' && (
-              <BadgePill label="Move Out" color="var(--ds-color-warning)" bg="var(--ds-color-warning-light)" />
-            )}
-            {isStudent && (
-              <BadgePill label="Student" color="var(--ds-color-primary)" bg="var(--ds-color-primary-light)" />
-            )}
-            {tenantType === 'business' && (
-              <BadgePill label="Business" color="var(--ds-color-primary)" bg="var(--ds-color-primary-light)" />
-            )}
-            {numberOfUnits === 'multi' && (
-              <BadgePill label="Multi-Unit" color="var(--ds-color-text-muted)" bg="var(--ds-color-surface-muted)" />
+              {taxExempt && <UnitBadge status="tax-exempt" size="lg" contrast="low" />}
+              {unitStatus === 'overdue' && <UnitBadge status="overdue" size="lg" contrast="low" />}
+              {unitStatus === 'move-out' && <Badge status="inactive" size="sm" contrast="low" label="Move Out" />}
+              {isStudent && <Badge status="secondary" size="sm" contrast="low" label="Student" />}
+              {tenantType === 'business' && <Badge status="secondary" size="sm" contrast="low" label="Business" />}
+              {numberOfUnits === 'multi' && <Badge status="archive" size="sm" contrast="low" label="Multi-Unit" />}
+            </div>
+          </div>
+
+          {/* Right: kebab menu */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <button
+              onClick={() => setDropdownOpen(o => !o)}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 8,
+                background: dropdownOpen ? '#F5F0FF' : 'var(--ds-color-surface-muted)',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MoreVerticalIcon />
+            </button>
+
+            {dropdownOpen && (
+              <Dropdown
+                items={dropdownItems}
+                onClose={() => setDropdownOpen(false)}
+              />
             )}
           </div>
         </div>
 
-        {/* Right: actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button onClick={onTransfer} style={btnStyle}>Transfer</button>
-          <button onClick={onMoveOut} style={btnStyle}>Move out</button>
-        </div>
-      </div>
+        {/* ── Row 2: email · phone · balance · access ── */}
+        <div style={{ paddingTop: 0, paddingRight: 24, paddingBottom: 14, paddingLeft: 56, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
 
-      {/* ── Row 2: email · phone · balance · access ── */}
-      <div style={{ paddingTop: 0, paddingRight: 24, paddingBottom: 14, paddingLeft: 56, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <MailIcon />
+            <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>{email}</span>
+          </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <MailIcon />
-          <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>{email}</span>
-        </div>
+          <Divider />
 
-        <Divider />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <PhoneIcon />
+            <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>{phone}</span>
+          </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <PhoneIcon />
-          <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>{phone}</span>
-        </div>
+          <Divider />
 
-        <Divider />
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>
-            Total Balance{' '}
-            <span style={{ color: balanceOverdue ? 'var(--ds-color-error)' : 'var(--ds-color-success)', fontWeight: 600 }}>
-              {balance}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>
+              Total Balance{' '}
+              <span style={{ color: balanceOverdue ? 'var(--ds-color-error)' : 'var(--ds-color-success)', fontWeight: 600 }}>
+                {balance}
+              </span>
             </span>
-          </span>
-          <QuestionIcon />
+            <QuestionIcon />
+          </div>
+
+          <Divider />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            {(accessStatus === 'enabled' || accessStatus === 'mixed') && <CheckCircleIcon />}
+            {(accessStatus === 'revoked' || accessStatus === 'mixed') && <CloseCircleIcon />}
+            <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>Access</span>
+          </div>
+
+          {gateIntegrated && (
+            <>
+              <Divider />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>Access Code</span>
+                {accessCode && (
+                  <span style={{ background: 'var(--ds-color-info-light, #eaf1ff)', fontSize: 13, fontWeight: 600, borderRadius: 6, padding: '2px 10px', color: 'var(--ds-color-text-primary)', border: '1px solid var(--ds-color-border)' }}>
+                    {accessCode}
+                  </span>
+                )}
+              </div>
+
+              <Divider />
+
+              <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ds-color-primary)', fontSize: 14, fontFamily: 'Inter, sans-serif', padding: 0, fontWeight: 400 }}>
+                View Access Hours
+              </button>
+            </>
+          )}
         </div>
 
-        <Divider />
-
-        {/* Access status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          {(accessStatus === 'enabled' || accessStatus === 'mixed') && <CheckCircleIcon />}
-          {(accessStatus === 'revoked' || accessStatus === 'mixed') && <CloseCircleIcon />}
-          <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>Access</span>
-        </div>
-
-        {gateIntegrated && (
-          <>
-            <Divider />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 14, color: 'var(--ds-color-text-primary)' }}>Access Code</span>
-              {accessCode && (
-                <span style={{ background: 'var(--ds-color-info-light, #eaf1ff)', fontSize: 13, fontWeight: 600, borderRadius: 6, padding: '2px 10px', color: 'var(--ds-color-text-primary)', border: '1px solid var(--ds-color-border)' }}>
-                  {accessCode}
-                </span>
-              )}
-            </div>
-
-            <Divider />
-
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ds-color-primary)', fontSize: 14, fontFamily: 'Inter, sans-serif', padding: 0, fontWeight: 400 }}>
-              View Access Hours
-            </button>
-          </>
+        {/* ── Tabs ── */}
+        {!hideTabs && (
+          <div style={{ display: 'flex', alignItems: 'flex-end', paddingLeft: 24, borderTop: '1px solid var(--ds-color-border)' }}>
+            {tabDefs.map(tab => {
+              const isActive = activeTab === tab.key
+              const count = tabCounts?.[tab.key as keyof typeof tabCounts]
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => onTabChange?.(tab.key)}
+                  style={{
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: 15,
+                    fontWeight: isActive ? 700 : 500,
+                    color: isActive ? 'var(--ds-color-primary)' : 'var(--ds-color-text-primary)',
+                    background: 'none',
+                    border: 'none',
+                    borderBottom: isActive ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
+                    cursor: 'pointer',
+                    padding: '10px 16px',
+                    marginBottom: -1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                  }}
+                >
+                  {tab.label}
+                  {count !== undefined && (
+                    <span style={{ background: 'var(--ds-color-surface-muted)', color: 'var(--ds-color-text-muted)', fontSize: 11, fontWeight: 600, borderRadius: 999, padding: '1px 6px', minWidth: 18, textAlign: 'center' }}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
         )}
       </div>
 
-      {/* ── Tabs ── */}
-      {!hideTabs && (
-        <div style={{ display: 'flex', alignItems: 'flex-end', paddingLeft: 24, borderTop: '1px solid var(--ds-color-border)' }}>
-          {tabDefs.map(tab => {
-            const isActive = activeTab === tab.key
-            const count = tabCounts?.[tab.key as keyof typeof tabCounts]
-            return (
-              <button
-                key={tab.key}
-                onClick={() => onTabChange?.(tab.key)}
-                style={{
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: 15,
-                  fontWeight: isActive ? 700 : 500,
-                  color: isActive ? 'var(--ds-color-primary)' : 'var(--ds-color-text-primary)',
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: isActive ? '2px solid var(--ds-color-primary)' : '2px solid transparent',
-                  cursor: 'pointer',
-                  padding: '10px 16px',
-                  marginBottom: -1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                }}
-              >
-                {tab.label}
-                {count !== undefined && (
-                  <span style={{ background: 'var(--ds-color-surface-muted)', color: 'var(--ds-color-text-muted)', fontSize: 11, fontWeight: 600, borderRadius: 999, padding: '1px 6px', minWidth: 18, textAlign: 'center' }}>
-                    {count}
-                  </span>
-                )}
-              </button>
-            )
-          })}
-        </div>
-      )}
-    </div>
+      {/* Modal — Figma 8107:71831 */}
+      <Modal
+        open={modalOpen}
+        title="Apply Tax Exemption?"
+        message={
+          <span>
+            Are you sure you want to apply tax exemption? This will apply to{' '}
+            <strong>ALL UNITS</strong> currently rented by this tenant, as well as any{' '}
+            <strong>future rentals</strong>.
+          </span>
+        }
+        confirmLabel="Yes, apply tax exemption"
+        cancelLabel="Cancel"
+        onConfirm={handleModalConfirm}
+        onCancel={() => setModalOpen(false)}
+      />
+
+      {/* Toast notification */}
+      <Toast
+        open={toastOpen}
+        type={taxExempt ? 'success' : 'warning'}
+        message={toastMessage}
+        onClose={() => setToastOpen(false)}
+      />
+    </>
   )
 }
 

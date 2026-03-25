@@ -1,4 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Badge, UnitBadge } from './Badge'
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth)
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+  return width
+}
 import { Tabs } from './Tabs'
 
 export interface Tenant {
@@ -35,44 +46,11 @@ const pastTenants: Tenant[] = [
   { id: '10', name: 'James Jackson', unit: '509', status: 'past', moveInDate: 'Jan 3, 2021', balance: '$0.00', recServices: true },
 ]
 
-const statusBadgeStyle = (status: Tenant['status']): React.CSSProperties => {
-  const map: Record<string, React.CSSProperties> = {
-    overdue: {
-      background: 'var(--ds-color-error-light)',
-      color: 'var(--ds-color-error)',
-    },
-    'good-standing': {
-      background: 'var(--ds-color-success-light)',
-      color: 'var(--ds-color-success)',
-    },
-    'move-out': {
-      background: 'var(--ds-color-warning-light)',
-      color: 'var(--ds-color-warning)',
-    },
-    past: {
-      background: 'var(--ds-color-surface-muted)',
-      color: 'var(--ds-color-text-muted)',
-    },
-  }
-  return {
-    ...map[status],
-    fontSize: 12,
-    fontWeight: 500,
-    borderRadius: 4,
-    padding: '3px 8px',
-    whiteSpace: 'nowrap',
-    fontFamily: 'Inter, sans-serif',
-  }
-}
-
-const statusLabel = (status: Tenant['status']): string => {
-  const map: Record<string, string> = {
-    overdue: 'Overdue',
-    'good-standing': 'Good Standing',
-    'move-out': 'Move Out',
-    past: 'Past Tenant',
-  }
-  return map[status]
+const StatusBadge = ({ status }: { status: Tenant['status'] }) => {
+  if (status === 'overdue')       return <UnitBadge status="overdue" size="sm" contrast="low" />
+  if (status === 'good-standing') return <UnitBadge status="occupied" size="sm" contrast="low" />
+  if (status === 'move-out')      return <Badge status="inactive" size="sm" contrast="low" label="Move Out" />
+  return <Badge status="archive" size="sm" contrast="low" label="Past Tenant" />
 }
 
 const balanceColor = (tenant: Tenant): string => {
@@ -161,6 +139,23 @@ const MoreVerticalIcon = () => (
   </svg>
 )
 
+type StatusFilter = 'all' | 'overdue' | 'good-standing' | 'move-out' | 'past'
+type RecServicesFilter = 'all' | 'enrolled' | 'not-enrolled'
+
+const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'overdue', label: 'Overdue' },
+  { value: 'good-standing', label: 'Good Standing' },
+  { value: 'move-out', label: 'Move Out' },
+  { value: 'past', label: 'Past Tenant' },
+]
+
+const REC_OPTIONS: { value: RecServicesFilter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'enrolled', label: 'Enrolled' },
+  { value: 'not-enrolled', label: 'Not Enrolled' },
+]
+
 export const TenantsTable: React.FC<TenantsTableProps> = ({
   tab = 'current',
   tenants,
@@ -171,13 +166,31 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
   const [selectedTab, setSelectedTab] = useState(tab)
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set())
   const [searchValue, setSearchValue] = useState('')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+  const [recFilter, setRecFilter] = useState<RecServicesFilter>('all')
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const isMobile = useWindowWidth() < 768
 
   const handleTabChange = (key: string) => {
     setSelectedTab(key as 'current' | 'past')
     onTabChange?.(key)
   }
 
-  const displayTenants = tenants ?? (selectedTab === 'current' ? currentTenants : pastTenants)
+  const allTenants = tenants ?? (selectedTab === 'current' ? currentTenants : pastTenants)
+  const displayTenants = allTenants.filter(t => {
+    if (searchValue.trim()) {
+      const q = searchValue.toLowerCase()
+      const matchesSearch = t.name.toLowerCase().includes(q) || t.unit.toLowerCase().includes(q) || t.balance.toLowerCase().includes(q)
+      if (!matchesSearch) return false
+    }
+    if (statusFilter !== 'all' && t.status !== statusFilter) return false
+    if (recFilter === 'enrolled' && !t.recServices) return false
+    if (recFilter === 'not-enrolled' && t.recServices) return false
+    return true
+  })
+
+  const hasActiveFilters = statusFilter !== 'all' || recFilter !== 'all'
+  const clearFilters = () => { setStatusFilter('all'); setRecFilter('all') }
 
   const toggleRow = (id: string) => {
     setSelectedRows((prev) => {
@@ -201,8 +214,8 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    background: '#ffffff',
-    border: '1px solid #E1E5EF',
+    background: 'var(--ds-color-surface)',
+    border: '1px solid var(--ds-color-border)',
     borderRadius: 8,
     padding: '7px 12px',
     height: 34,
@@ -210,7 +223,7 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
     cursor: 'pointer',
     fontFamily: 'Inter, sans-serif',
     fontSize: 14,
-    color: 'rgba(22,22,22,0.6)',
+    color: 'var(--ds-color-text-muted)',
     whiteSpace: 'nowrap' as const,
     flexShrink: 0,
   }
@@ -255,63 +268,114 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
       </div>
 
       {/* Filter bar — on page bg, outside white card */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 24,
-          marginBottom: 20,
-        }}
-      >
-        {/* Search field — 300px with search + filter-list icons */}
-        <div style={{ ...fieldStyle, width: 300, cursor: 'text' }}>
-          <SearchIcon />
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            style={{
-              border: 'none',
-              outline: 'none',
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 14,
-              color: 'rgba(22,22,22,0.6)',
-              background: 'transparent',
-              flex: 1,
-              minWidth: 0,
-            }}
-          />
-          <FilterListIcon />
-        </div>
-
-        {/* Filter dropdowns — 82px each */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+        {/* Row 1: search + kebab */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {['Status', 'Move-Out Date', 'Unit Type', 'Facility', 'Floor', 'Tier', 'Rec. Services'].map(label => (
-            <div key={label} style={{ ...fieldStyle, width: 82, justifyContent: 'space-between', padding: '7px 12px', overflow: 'hidden' }}>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>{label}</span>
-              <ChevronDownIcon />
-            </div>
-          ))}
+          <div style={{ ...fieldStyle, flex: 1, cursor: 'text' }}>
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              style={{
+                border: 'none',
+                outline: 'none',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: 14,
+                color: 'var(--ds-color-text-muted)',
+                background: 'transparent',
+                flex: 1,
+                minWidth: 0,
+              }}
+            />
+            <FilterListIcon />
+          </div>
           <button
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 14, fontWeight: 500, color: '#7D52F8', padding: '3px 0', letterSpacing: 0.28, whiteSpace: 'nowrap' }}
-          >
-            Clear all
-          </button>
-        </div>
-
-        {/* Kebab icon button */}
-        <div style={{ marginLeft: 'auto' }}>
-          <button
-            style={{ width: 32, height: 32, background: '#F1F3F9', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6 }}
+            style={{ width: 32, height: 32, background: 'var(--ds-color-surface-muted)', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, flexShrink: 0 }}
           >
             <MoreVerticalIcon />
           </button>
         </div>
+
+        {/* Row 2: filter dropdowns — span full width, functional for Status + Rec. Services */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflowX: isMobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+
+          {/* Status filter — wired */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <div
+              onClick={() => setOpenDropdown(openDropdown === 'status' ? null : 'status')}
+              style={{ ...fieldStyle, justifyContent: 'space-between', width: '100%', boxSizing: 'border-box', background: statusFilter !== 'all' ? 'var(--ds-color-primary-light)' : 'var(--ds-color-surface)', color: statusFilter !== 'all' ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)' }}
+            >
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>
+                {statusFilter === 'all' ? 'Status' : STATUS_OPTIONS.find(o => o.value === statusFilter)?.label}
+              </span>
+              <ChevronDownIcon />
+            </div>
+            {openDropdown === 'status' && (
+              <>
+                <div onClick={() => setOpenDropdown(null)} style={{ position: 'fixed', inset: 0, zIndex: 99 }} />
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.2)', zIndex: 100, minWidth: 160, overflow: 'hidden' }}>
+                  {STATUS_OPTIONS.map(opt => (
+                    <div
+                      key={opt.value}
+                      onClick={() => { setStatusFilter(opt.value); setOpenDropdown(null) }}
+                      style={{ padding: '9px 14px', fontSize: 14, fontFamily: 'Inter, sans-serif', cursor: 'pointer', color: statusFilter === opt.value ? 'var(--ds-color-primary)' : 'var(--ds-color-text-primary)', background: statusFilter === opt.value ? 'var(--ds-color-primary-light)' : 'transparent', fontWeight: statusFilter === opt.value ? 500 : 400 }}
+                      onMouseEnter={e => { if (statusFilter !== opt.value) e.currentTarget.style.background = 'var(--ds-color-surface-subtle)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = statusFilter === opt.value ? 'var(--ds-color-primary-light)' : 'transparent' }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Rec. Services filter — wired */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <div
+              onClick={() => setOpenDropdown(openDropdown === 'rec' ? null : 'rec')}
+              style={{ ...fieldStyle, justifyContent: 'space-between', width: '100%', boxSizing: 'border-box', background: recFilter !== 'all' ? 'var(--ds-color-primary-light)' : 'var(--ds-color-surface)', color: recFilter !== 'all' ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)' }}
+            >
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>
+                {recFilter === 'all' ? 'Rec. Services' : REC_OPTIONS.find(o => o.value === recFilter)?.label}
+              </span>
+              <ChevronDownIcon />
+            </div>
+            {openDropdown === 'rec' && (
+              <>
+                <div onClick={() => setOpenDropdown(null)} style={{ position: 'fixed', inset: 0, zIndex: 99 }} />
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.2)', zIndex: 100, minWidth: 160, overflow: 'hidden' }}>
+                  {REC_OPTIONS.map(opt => (
+                    <div
+                      key={opt.value}
+                      onClick={() => { setRecFilter(opt.value); setOpenDropdown(null) }}
+                      style={{ padding: '9px 14px', fontSize: 14, fontFamily: 'Inter, sans-serif', cursor: 'pointer', color: recFilter === opt.value ? 'var(--ds-color-primary)' : 'var(--ds-color-text-primary)', background: recFilter === opt.value ? 'var(--ds-color-primary-light)' : 'transparent', fontWeight: recFilter === opt.value ? 500 : 400 }}
+                      onMouseEnter={e => { if (recFilter !== opt.value) e.currentTarget.style.background = 'var(--ds-color-surface-subtle)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = recFilter === opt.value ? 'var(--ds-color-primary-light)' : 'transparent' }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 14, fontWeight: 500, color: '#7D52F8', padding: '3px 0', letterSpacing: 0.28, whiteSpace: 'nowrap', flexShrink: 0 }}
+            >
+              Clear all
+            </button>
+          )}
+        </div>
       </div>
 
       {/* White card: bulk bar + table */}
-      <div style={{ background: '#ffffff', borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--ds-color-surface)', borderRadius: 8, overflow: 'hidden' }}>
 
       {/* Bulk action bar */}
       <div
@@ -405,25 +469,19 @@ export const TenantsTable: React.FC<TenantsTableProps> = ({
                 </td>
                 <td style={tdStyle}>{tenant.unit}</td>
                 <td style={tdStyle}>
-                  <span style={statusBadgeStyle(tenant.status)}>{statusLabel(tenant.status)}</span>
+                  <StatusBadge status={tenant.status} />
                 </td>
                 <td style={tdStyle}>{tenant.moveInDate}</td>
                 <td style={{ ...tdStyle, fontWeight: 600, color: balanceColor(tenant) }}>
                   {tenant.balance}
                 </td>
                 <td style={tdStyle}>
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: tenant.recServices ? 'var(--ds-color-success)' : 'var(--ds-color-text-muted)',
-                      background: tenant.recServices ? 'var(--ds-color-success-light)' : 'var(--ds-color-surface-muted)',
-                      borderRadius: 4,
-                      padding: '2px 8px',
-                    }}
-                  >
-                    {tenant.recServices ? 'Enrolled' : 'Not Enrolled'}
-                  </span>
+                  <Badge
+                    status={tenant.recServices ? 'active' : 'archive'}
+                    size="sm"
+                    contrast="low"
+                    label={tenant.recServices ? 'Enrolled' : 'Not Enrolled'}
+                  />
                 </td>
                 <td style={tdStyle}>
                   <button

@@ -22,7 +22,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeKey, onTabChange }) => {
         display: 'flex',
         alignItems: 'flex-end',
         gap: 12,
-        borderBottom: '1px solid #E1E6EF',
+        borderBottom: '1px solid var(--ds-color-border)',
         fontFamily: 'Inter, sans-serif',
       }}
     >
@@ -46,7 +46,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeKey, onTabChange }) => {
               fontFamily: 'Inter, sans-serif',
               fontSize: 15,
               fontWeight: isActive ? 700 : 500,
-              color: isActive ? '#161616' : 'rgba(22,22,22,0.6)',
+              color: isActive ? 'var(--ds-color-text-primary)' : 'var(--ds-color-text-muted)',
               letterSpacing: isActive ? 0.225 : 0.3,
               lineHeight: '26px',
               whiteSpace: 'nowrap',
@@ -60,13 +60,13 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeKey, onTabChange }) => {
                   width: 20,
                   height: 20,
                   borderRadius: '50%',
-                  background: '#F1F3F9',
+                  background: 'var(--ds-color-surface-muted)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: 12,
                   fontWeight: 600,
-                  color: 'rgba(22,22,22,0.8)',
+                  color: 'var(--ds-color-text-primary)',
                   letterSpacing: 0.24,
                   flexShrink: 0,
                 }}

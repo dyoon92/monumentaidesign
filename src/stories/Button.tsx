@@ -30,9 +30,9 @@ const COLORS: Record<ButtonType, { default: ColorSet; hover: ColorSet; disabled:
     disabled: { bg: '#E1E6EF', border: 'none', color: '#A4B1CC' },
   },
   secondary: {
-    default:  { bg: 'transparent', border: '1px solid #CBD2E1', color: '#161616' },
-    hover:    { bg: '#F8F9FC',     border: '1px solid #CBD2E1', color: '#161616' },
-    disabled: { bg: '#F1F3F9',     border: '1px solid #CBD2E1', color: '#A4B1CC' },
+    default:  { bg: 'transparent',                    border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-primary)' },
+    hover:    { bg: 'var(--ds-color-surface-subtle)', border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-primary)' },
+    disabled: { bg: 'var(--ds-color-surface-muted)',  border: '1px solid var(--ds-color-border)', color: 'var(--ds-color-text-muted)' },
   },
   danger: {
     default:  { bg: 'transparent', border: '1px solid #E02D3C', color: '#E02D3C' },

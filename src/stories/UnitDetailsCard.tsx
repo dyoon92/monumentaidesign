@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Badge, UnitBadge } from './Badge'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -54,11 +55,11 @@ const DEFAULT_RENT_CARDS: RentCard[] = [
   { label: 'Next', amount: '$120.00', date: 'Jun 29, 2024', isCurrent: false, increase: '+$5.00', streetRate: null },
 ]
 
-const STATUS_BADGE: Record<UnitStatus, { label: string; bg: string; color: string }> = {
-  'overdue': { label: 'Overdue', bg: 'var(--ds-color-error-light)', color: 'var(--ds-color-error)' },
-  'good-standing': { label: 'Good Standing', bg: 'var(--ds-color-success-light)', color: 'var(--ds-color-success)' },
-  'move-out': { label: 'Move Out', bg: 'var(--ds-color-warning-light)', color: 'var(--ds-color-warning)' },
-  'vacant': { label: 'Vacant', bg: 'var(--ds-color-surface-muted)', color: 'var(--ds-color-text-muted)' },
+const UnitStatusBadge = ({ status }: { status: UnitStatus }) => {
+  if (status === 'overdue')       return <UnitBadge status="overdue" size="sm" contrast="low" />
+  if (status === 'good-standing') return <UnitBadge status="occupied" size="sm" contrast="low" />
+  if (status === 'vacant')        return <UnitBadge status="vacant" size="sm" contrast="low" />
+  return <Badge status="inactive" size="sm" contrast="low" label="Move Out" />
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -81,7 +82,6 @@ export const UnitDetailsCard: React.FC<UnitDetailsCardProps> = ({
   onMoveOut,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const badge = STATUS_BADGE[status]
 
   const detailRows: { label: string; value: React.ReactNode }[] = [
     { label: 'Size', value: size },
@@ -95,9 +95,7 @@ export const UnitDetailsCard: React.FC<UnitDetailsCardProps> = ({
       label: 'Protection',
       value: (
         <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ background: 'var(--ds-color-success-light)', color: 'var(--ds-color-success)', fontSize: 11, fontWeight: 600, borderRadius: 'var(--ds-border-radius-sm)', padding: '2px 6px' }}>
-            Enrolled
-          </span>
+          <Badge status="active" size="sm" contrast="low" label="Enrolled" />
           <span style={{ fontSize: 13 }}>{protectionPlan}</span>
         </span>
       ),
@@ -108,9 +106,7 @@ export const UnitDetailsCard: React.FC<UnitDetailsCardProps> = ({
         <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 13 }}>{recServices}</span>
           {recServicesExtra > 0 && (
-            <span style={{ background: 'var(--ds-color-primary-light)', color: 'var(--ds-color-primary)', fontSize: 11, fontWeight: 600, borderRadius: 'var(--ds-border-radius-sm)', padding: '2px 6px' }}>
-              +{recServicesExtra}
-            </span>
+            <Badge status="in-progress" size="sm" contrast="low" label={`+${recServicesExtra}`} />
           )}
         </span>
       ),
@@ -118,31 +114,29 @@ export const UnitDetailsCard: React.FC<UnitDetailsCardProps> = ({
   ]
 
   return (
-    <div style={{ background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
       {/* Header */}
       <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--ds-color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 26, fontWeight: 700, color: 'var(--ds-color-text-primary)' }}>{unitNumber}</span>
-          <span style={{ background: badge.bg, color: badge.color, fontSize: 12, fontWeight: 600, borderRadius: 'var(--ds-border-radius-sm)', padding: '3px 8px' }}>
-            {badge.label}
-          </span>
+          <UnitStatusBadge status={status} />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
             onClick={onMoveOut}
-            style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 500, background: 'white', color: 'var(--ds-color-text-primary)', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-md)', padding: '6px 14px', cursor: 'pointer' }}
+            style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 500, background: 'var(--ds-color-surface)', color: 'var(--ds-color-text-primary)', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-md)', padding: '6px 14px', cursor: 'pointer' }}
           >
             Move Out
           </button>
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setMenuOpen(v => !v)}
-              style={{ width: 32, height: 32, borderRadius: 'var(--ds-border-radius-md)', background: 'white', border: '1px solid var(--ds-color-border)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'var(--ds-color-text-primary)' }}
+              style={{ width: 32, height: 32, borderRadius: 'var(--ds-border-radius-md)', background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'var(--ds-color-text-primary)' }}
             >
               ⋮
             </button>
             {menuOpen && (
-              <div style={{ position: 'absolute', top: 36, right: 0, background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-md)', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', minWidth: 160, zIndex: 100, overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 36, right: 0, background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', borderRadius: 'var(--ds-border-radius-md)', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', minWidth: 160, zIndex: 100, overflow: 'hidden' }}>
                 {['Move Out', 'Transfer', 'New Unit', 'Edit Unit', 'Apply Promotion'].map(item => (
                   <button
                     key={item}

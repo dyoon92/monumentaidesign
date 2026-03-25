@@ -1,4 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth)
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+  return width
+}
 import { Tabs } from './stories/Tabs'
 
 // ─── Placeholder ──────────────────────────────────────────────────────────────
@@ -24,6 +34,8 @@ function Placeholder({ name }: { name: string }) {
   )
 }
 import '../src/tokens/variables.css'
+import { OccupancyWidget, RevenueWidget, NetMoveInsWidget, LeadsWidget, PastDueWidget, UnitStatusWidget, ProtectionAutopayWidget, ECRIWidget } from './stories/DashboardWidgets'
+import { FMKPIRow, PriorityTasksPanel, RecentCommunicationsPanel, GoalTrackerPanel, DelinquenciesPanel, GoogleReviewsPanel, PromotionsPanel } from './stories/FMDashboardWidgets'
 import { TenantsTable } from './stories/TenantsTable'
 import { TenantPageHeader } from './stories/TenantPageHeader'
 import { PaymentBanner } from './stories/PaymentBanner'
@@ -142,9 +154,11 @@ const TENANTS: TenantRecord[] = [
 function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => void }) {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
   const tabs: ActiveTab[] = ['overview', 'billing', 'documents', 'access', 'renewal']
+  const width = useWindowWidth()
+  const isMobile = width < 768
 
   return (
-    <div style={{ padding: '20px 20px 24px' }}>
+    <div style={{ padding: isMobile ? '12px 12px 20px' : '20px 20px 24px' }}>
       {/* Header card */}
       <TenantPageHeader
         name={tenant.name}
@@ -160,7 +174,7 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
       />
 
       {/* Tab bar — Tabs component from Figma node 8107-365538 */}
-      <div style={{ margin: '16px 0' }}>
+      <div style={{ margin: '16px 0', overflowX: isMobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
         <Tabs
           tabs={tabs.map(t => ({ key: t, label: t.charAt(0).toUpperCase() + t.slice(1) }))}
           activeKey={activeTab}
@@ -186,9 +200,21 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
       {/* Content */}
       <div>
         {activeTab === 'overview' && (
-          <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: 20,
+            alignItems: 'flex-start',
+          }}>
             {/* Left column */}
-            <div style={{ flex: '0 0 520px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{
+              flex: isMobile ? 'none' : '0 0 520px',
+              width: isMobile ? '100%' : undefined,
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+            }}>
               <UnitDetailsCard
                 unitNumber={tenant.unit}
                 status={tenant.unitStatus}
@@ -204,7 +230,7 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
               />
             </div>
             {/* Right column — Communications */}
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ flex: 1, minWidth: 0, width: isMobile ? '100%' : undefined }}>
               <CommunicationsPanel />
             </div>
           </div>
@@ -230,6 +256,105 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
 
         {activeTab === 'renewal' && <Placeholder name="RenewalTab" />}
       </div>
+    </div>
+  )
+}
+
+// ─── Dashboard view ───────────────────────────────────────────────────────────
+
+const ChevronDownIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+type DashMode = 'portfolio' | 'facility'
+
+function DashboardView() {
+  const width = useWindowWidth()
+  const isMobile = width < 768
+  const gap = 20
+  const [mode, setMode] = useState<DashMode>('portfolio')
+
+  return (
+    <div style={{ padding: isMobile ? '12px 12px 32px' : '20px 20px 40px', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* Page header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <span style={{ fontSize: 28, fontWeight: 700, color: 'var(--ds-color-text-primary)' }}>Dashboard</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Role toggle — segmented control matching Figma node 8104-364225 */}
+          <div style={{ display: 'flex', gap: 1, background: 'var(--ds-color-border)', borderRadius: 8, padding: 1 }}>
+            {(['portfolio', 'facility'] as DashMode[]).map((m) => (
+              <button
+                key={m}
+                onClick={() => setMode(m)}
+                style={{
+                  padding: '5px 16px', border: 'none', borderRadius: 7, cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif', fontSize: 12,
+                  fontWeight: mode === m ? 600 : 500,
+                  color: mode === m ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
+                  background: mode === m ? 'var(--ds-color-primary-light)' : 'var(--ds-color-surface)',
+                  whiteSpace: 'nowrap', letterSpacing: 0.24,
+                }}
+              >{m === 'portfolio' ? 'Portfolio Owner' : 'Facility Manager'}</button>
+            ))}
+          </div>
+          <button style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            fontFamily: 'Inter, sans-serif', fontSize: 14, fontWeight: 500,
+            background: 'var(--ds-color-surface)', color: 'var(--ds-color-text-primary)',
+            border: '1px solid var(--ds-color-border)', borderRadius: 8,
+            padding: '7px 14px', cursor: 'pointer',
+          }}>
+            Last 30 Days <ChevronDownIcon />
+          </button>
+        </div>
+      </div>
+
+      {mode === 'portfolio' ? (
+        <>
+          {/* Row 1: Occupancy + Revenue (equal width) */}
+          <div style={{ display: 'flex', gap, marginBottom: gap, flexDirection: isMobile ? 'column' : 'row', alignItems: 'stretch' }}>
+            <div style={{ flex: 1, minWidth: 0 }}><OccupancyWidget /></div>
+            <div style={{ flex: 1, minWidth: 0 }}><RevenueWidget /></div>
+          </div>
+
+          {/* Row 2: Net Move-Ins | Leads | Past Due */}
+          <div style={{ display: 'flex', gap, marginBottom: gap, flexDirection: isMobile ? 'column' : 'row', alignItems: 'stretch' }}>
+            <div style={{ flex: 1, minWidth: 0 }}><NetMoveInsWidget /></div>
+            <div style={{ flex: 1, minWidth: 0 }}><LeadsWidget /></div>
+            <div style={{ flex: 1, minWidth: 0 }}><PastDueWidget /></div>
+          </div>
+
+          {/* Row 3: Unit Status | Protection+Autopay stacked | ECRI stacked */}
+          <div style={{ display: 'flex', gap, flexDirection: isMobile ? 'column' : 'row', alignItems: 'stretch' }}>
+            <div style={{ flex: 1, minWidth: 0 }}><UnitStatusWidget /></div>
+            <div style={{ flex: 1, minWidth: 0 }}><ProtectionAutopayWidget /></div>
+            <div style={{ flex: 1, minWidth: 0 }}><ECRIWidget /></div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* FM: KPI row */}
+          <FMKPIRow />
+
+          {/* FM: Two-column content */}
+          <div style={{ display: 'flex', gap, flexDirection: isMobile ? 'column' : 'row', alignItems: 'flex-start' }}>
+            {/* Left column */}
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap }}>
+              <PriorityTasksPanel />
+              <RecentCommunicationsPanel />
+              <GoalTrackerPanel />
+            </div>
+            {/* Right column */}
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap }}>
+              <DelinquenciesPanel />
+              <GoogleReviewsPanel />
+              <PromotionsPanel />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -263,8 +388,11 @@ function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void 
 // ─── App shell ────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [nav, setNav] = useState<NavId>('tenants')
+  const [nav, setNav] = useState<NavId>('dashboard')
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null)
+  const [darkMode, setDarkMode] = useState(false)
+  const width = useWindowWidth()
+  const isMobile = width < 768
 
   const selectedTenant = TENANTS.find(t => t.id === selectedTenantId)
 
@@ -274,24 +402,28 @@ export default function App() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100vh', fontFamily: 'Inter, system-ui, sans-serif', overflow: 'hidden' }}>
+    <div data-theme={darkMode ? 'dark' : undefined} style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100vh', fontFamily: 'Inter, system-ui, sans-serif', overflow: 'hidden' }}>
       {/* Top navbar */}
-      <Navbar facilityName="Sunrise Self Storage" userName="DY" tasksCount={24} />
+      <Navbar facilityName="Sunrise Self Storage" userName="DY" tasksCount={24} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(d => !d)} />
 
       {/* Below navbar: sidebar + content — fills remaining height */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-        <Sidebar activeNav={nav} onNav={handleNav} userName="Dave Yoon" userEmail="dave@monumentai.com" />
+        {!isMobile && (
+          <Sidebar activeNav={nav} onNav={handleNav} userName="Dave Yoon" userEmail="dave@monumentai.com" />
+        )}
 
-        <main style={{ flex: 1, minWidth: 0, background: '#F1F3F9', overflowY: 'auto' }}>
+        <main style={{ flex: 1, minWidth: 0, background: 'var(--ds-color-page-bg)', overflowY: 'auto' }}>
           {selectedTenant ? (
             <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
           ) : nav === 'tenants' ? (
             <div style={{ padding: '20px 20px 24px' }}>
               <TenantsView onSelectTenant={setSelectedTenantId} />
             </div>
+          ) : nav === 'dashboard' ? (
+            <DashboardView />
           ) : (
             <div style={{ color: 'var(--ds-color-text-muted)', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
-              Select <strong>Tenants</strong> from the sidebar to see the demo
+              Select <strong>Tenants</strong> or <strong>Dashboard</strong> from the sidebar to see the demo
             </div>
           )}
         </main>

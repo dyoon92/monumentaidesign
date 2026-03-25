@@ -1,51 +1,52 @@
 import React from 'react'
 import { PinnedNotes } from './PinnedNotes'
+import { Button } from './Button'
 export type { PinnedNote } from './PinnedNotes'
 
 const LockIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <rect x="2" y="6" width="10" height="7" rx="1.5" stroke="var(--ds-color-text-primary)" strokeWidth="1.2" />
-    <path d="M4.5 6V4.5a2.5 2.5 0 015 0V6" stroke="var(--ds-color-text-primary)" strokeWidth="1.2" strokeLinecap="round" />
-    <circle cx="7" cy="9.5" r="1" fill="var(--ds-color-text-primary)" />
+    <rect x="2" y="6" width="10" height="7" rx="1.5" stroke="#B25E09" strokeWidth="1.2" />
+    <path d="M4.5 6V4.5a2.5 2.5 0 015 0V6" stroke="#B25E09" strokeWidth="1.2" strokeLinecap="round" />
+    <circle cx="7" cy="9.5" r="1" fill="#B25E09" />
   </svg>
 )
 
 const NoteIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <rect x="2" y="1.5" width="10" height="11" rx="1.5" stroke="var(--ds-color-warning)" strokeWidth="1.2" />
-    <path d="M4.5 5h5M4.5 7.5h5M4.5 10h3" stroke="var(--ds-color-warning)" strokeWidth="1.1" strokeLinecap="round" />
+    <rect x="2" y="1.5" width="10" height="11" rx="1.5" stroke="#B25E09" strokeWidth="1.2" />
+    <path d="M4.5 5h5M4.5 7.5h5M4.5 10h3" stroke="#B25E09" strokeWidth="1.1" strokeLinecap="round" />
   </svg>
 )
 
 const EmailIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <rect x="1" y="3" width="12" height="8" rx="1" stroke="#e07b39" strokeWidth="1.2" />
-    <path d="M1 4l6 4 6-4" stroke="#e07b39" strokeWidth="1.2" />
+    <rect x="1" y="3" width="12" height="8" rx="1" stroke="#7D52F8" strokeWidth="1.2" />
+    <path d="M1 4l6 4 6-4" stroke="#7D52F8" strokeWidth="1.2" />
   </svg>
 )
 
 const PaperclipIcon = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
     <path d="M10 5.5L5.5 10a3 3 0 01-4.243-4.243l5-5a2 2 0 012.829 2.829L4.586 8.086a1 1 0 01-1.414-1.414L8 1.842"
-      stroke="var(--ds-color-text-muted)" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+      stroke="rgba(22,22,22,0.6)" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
 const FilterIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M1.5 3.5h11M3.5 7h7M5.5 10.5h3" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" strokeLinecap="round" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M2 4h12M4.5 8h7M7 12h2" stroke="rgba(22,22,22,0.6)" strokeWidth="1.3" strokeLinecap="round" />
   </svg>
 )
 
 const CheckIcon = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-    <path d="M2 6l3 3 5-5" stroke="var(--ds-color-success)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M2 6l3 3 5-5" stroke="#08875D" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
 const ChevronDownIcon = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-    <path d="M3 4.5l3 3 3-3" stroke="var(--ds-color-text-muted)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M3 4.5l3 3 3-3" stroke="rgba(22,22,22,0.6)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -128,150 +129,149 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
   const mostRecentTime = messages[0]?.time
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', background: 'white', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden' }}>
+    <div style={{ fontFamily: 'Inter, sans-serif', background: 'var(--ds-color-surface)', border: '1px solid var(--ds-color-border)', borderRadius: 16, overflow: 'hidden' }}>
 
-      {/* Pinned notes — PinnedNotes component, Figma node 17392-4568 */}
+      {/* Pinned notes — Figma node 17392-4568 */}
       {pinnedNotes.length > 0 && (
         <PinnedNotes notes={pinnedNotes} />
       )}
 
-      {/* Filter bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+      {/* Action bar — Figma node 17386-7237 */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '16px 16px',
+          borderBottom: '1px solid var(--ds-color-border)',
+        }}
+      >
+        {/* Date Range dropdown */}
         <button
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: 6,
+            width: 125,
+            height: 34,
+            padding: '0 10px',
             fontFamily: 'Inter, sans-serif',
             fontSize: 13,
             fontWeight: 500,
             color: 'var(--ds-color-text-primary)',
-            background: 'white',
+            background: 'var(--ds-color-surface)',
             border: '1px solid var(--ds-color-border)',
-            borderRadius: 'var(--ds-border-radius-md)',
-            padding: '6px 12px',
+            borderRadius: 8,
             cursor: 'pointer',
+            boxSizing: 'border-box',
+            justifyContent: 'space-between',
           }}
         >
-          Date Range <ChevronDownIcon />
+          <span>Date Range</span>
+          <ChevronDownIcon />
         </button>
+
+        {/* Filter icon button */}
         <button
           style={{
             width: 32,
             height: 32,
-            background: 'white',
-            border: '1px solid var(--ds-color-border)',
-            borderRadius: 'var(--ds-border-radius-md)',
+            background: 'var(--ds-color-surface-muted)',
+            border: 'none',
+            borderRadius: 8,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            flexShrink: 0,
           }}
         >
           <FilterIcon />
         </button>
+
         <div style={{ flex: 1 }} />
+
+        {/* Add note link button */}
         <button
           onClick={onAddNote}
           style={{
             fontFamily: 'Inter, sans-serif',
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: 500,
-            color: 'var(--ds-color-text-primary)',
-            background: 'white',
-            border: '1px solid var(--ds-color-border)',
-            borderRadius: 'var(--ds-border-radius-md)',
-            padding: '6px 14px',
-            cursor: 'pointer',
-          }}
-        >
-          Add Note
-        </button>
-        <button
-          onClick={onSendMessage}
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: 13,
-            fontWeight: 500,
-            color: 'white',
-            background: 'var(--ds-color-primary)',
+            color: '#7D52F7',
+            background: 'none',
             border: 'none',
-            borderRadius: 'var(--ds-border-radius-md)',
-            padding: '6px 14px',
+            padding: '0 4px',
             cursor: 'pointer',
           }}
         >
-          Send Message
+          Add note
         </button>
+
+        {/* Send Message primary button */}
+        <Button label="Send Message" variant="primary" size="sm" onClick={onSendMessage} />
       </div>
 
-      {/* Most recent label */}
-      {mostRecentTime && (
-        <div style={{ textAlign: 'center', marginBottom: 12 }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--ds-color-text-muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: 6,
-            }}
-          >
-            Most recent
+      {/* Message feed */}
+      <div style={{ padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 16, maxHeight: 520, overflowY: 'auto' }}>
+
+        {/* Most Recent divider */}
+        {mostRecentTime && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <div
+              style={{
+                background: 'var(--ds-color-surface-muted)',
+                borderRadius: 100,
+                padding: '4px 14px',
+                fontSize: 14,
+                fontWeight: 700,
+                color: 'var(--ds-color-text-muted)',
+              }}
+            >
+              Most Recent
+            </div>
+            <span style={{ fontSize: 12, color: 'var(--ds-color-text-muted)' }}>{mostRecentTime}</span>
           </div>
-          <span
-            style={{
-              fontSize: 12,
-              color: 'var(--ds-color-text-muted)',
-              background: 'var(--ds-color-surface-subtle)',
-              borderRadius: 'var(--ds-border-radius-sm)',
-              padding: '3px 10px',
-            }}
-          >
-            {mostRecentTime}
-          </span>
-        </div>
-      )}
+        )}
 
-      {/* Messages */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {/* Messages */}
         {messages.map((msg, i) => {
-          const iconBg =
-            msg.type === 'lock' ? 'var(--ds-color-surface-muted)'
-            : msg.type === 'note' ? 'var(--ds-color-warning-light)'
-            : '#fff3eb'
-
+          // Card background per Figma: lock/note = #FFF8EB, email = #F5F0FF
           const msgBg =
-            msg.type === 'lock' ? 'var(--ds-color-surface-subtle)'
+            msg.type === 'lock' ? 'var(--ds-color-warning-subtle)'
             : msg.type === 'note' ? 'var(--ds-color-warning-subtle)'
-            : 'white'
+            : 'var(--ds-color-primary-light)'
 
           const icon =
             msg.type === 'lock' ? <LockIcon />
             : msg.type === 'note' ? <NoteIcon />
             : <EmailIcon />
 
+          // Icon circle bg
+          const iconBg =
+            msg.type === 'lock' ? 'var(--ds-color-warning-light)'
+            : msg.type === 'note' ? 'var(--ds-color-warning-light)'
+            : 'var(--ds-color-color-5)'
+
           return (
             <div
               key={i}
               style={{
                 background: msgBg,
-                border: '1px solid var(--ds-color-border)',
-                borderRadius: 'var(--ds-border-radius-lg)',
+                borderRadius: 12,
                 padding: '12px 14px',
                 display: 'flex',
                 gap: 10,
                 alignItems: 'flex-start',
               }}
             >
+              {/* Icon circle */}
               <div
                 style={{
                   width: 28,
                   height: 28,
                   borderRadius: '50%',
                   background: iconBg,
-                  border: '1px solid var(--ds-color-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -281,18 +281,21 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
               >
                 {icon}
               </div>
+
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 11, color: 'var(--ds-color-text-muted)', marginBottom: 4 }}>{msg.time}</div>
+
                 {msg.type === 'lock' && (
-                  <span style={{ fontSize: 13 }}>
-                    <strong>Lock Combination</strong>
+                  <div style={{ fontSize: 12, color: 'var(--ds-color-text-primary)', lineHeight: 1.5 }}>
+                    <span style={{ fontWeight: 600 }}>Lock Combination</span>
                     <br />
                     {msg.lockName} added to {msg.unitName} with code <strong>{msg.code}</strong>.
-                  </span>
+                  </div>
                 )}
+
                 {msg.type === 'note' && (
                   <div>
-                    <p style={{ margin: '0 0 6px', fontSize: 13, lineHeight: 1.5 }}>{msg.text}</p>
+                    <p style={{ margin: '0 0 6px', fontSize: 12, lineHeight: 1.6, color: 'var(--ds-color-text-primary)' }}>{msg.text}</p>
                     {msg.sentBy && (
                       <span style={{ fontSize: 12, color: 'var(--ds-color-text-muted)' }}>
                         Sent by {msg.sentBy}
@@ -300,10 +303,11 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
                     )}
                   </div>
                 )}
+
                 {msg.type === 'email' && (
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>{msg.subject}</div>
-                    <p style={{ margin: '0 0 10px', fontSize: 13, lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, color: 'var(--ds-color-text-primary)' }}>{msg.subject}</div>
+                    <p style={{ margin: '0 0 10px', fontSize: 12, lineHeight: 1.6, whiteSpace: 'pre-line', color: 'var(--ds-color-text-primary)' }}>
                       Hi,{'\n'}{msg.body}
                     </p>
                     {msg.attachments && msg.attachments.length > 0 && (
@@ -315,14 +319,14 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
                               display: 'flex',
                               alignItems: 'center',
                               gap: 6,
-                              background: 'var(--ds-color-surface-subtle)',
-                              border: '1px solid var(--ds-color-border)',
-                              borderRadius: 'var(--ds-border-radius-sm)',
-                              padding: '5px 10px',
+                              background: 'rgba(255,255,255,0.6)',
+                              border: '1px solid rgba(125,82,248,0.2)',
+                              borderRadius: 6,
+                              padding: '4px 8px',
                             }}
                           >
                             <PaperclipIcon />
-                            <span style={{ fontSize: 12 }}>{att}</span>
+                            <span style={{ fontSize: 12, color: 'var(--ds-color-text-primary)' }}>{att}</span>
                           </div>
                         ))}
                       </div>
@@ -336,7 +340,7 @@ export const CommunicationsPanel: React.FC<CommunicationsPanelProps> = ({
                       {msg.delivered && (
                         <>
                           <CheckIcon />
-                          <span style={{ fontSize: 12, color: 'var(--ds-color-success)' }}>Delivered</span>
+                          <span style={{ fontSize: 12, color: '#08875D' }}>Delivered</span>
                         </>
                       )}
                     </div>
