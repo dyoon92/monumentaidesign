@@ -277,14 +277,20 @@ const NAV_ITEMS: { id: NavId; label: string; icon: React.ReactNode }[] = [
 ]
 
 // Settings sub-nav items
-const SETTINGS_ITEMS: { label: string; icon?: React.ReactNode; indent?: number }[] = [
+type SettingsChild = { label: string }
+type SettingsItem = { label: string; icon?: React.ReactNode; indent?: number; expandable?: boolean; children?: SettingsChild[] }
+
+const SETTINGS_ITEMS: SettingsItem[] = [
   { label: 'Portfolio Configurations', icon: <SlidersIcon /> },
   { label: 'Users & Permissions',      icon: <UsersIcon /> },
   { label: 'Facility Management',      icon: <BuildingIcon /> },
   { label: 'Call Center Setup',        icon: <CallsIcon /> },
-  { label: 'Phone Numbers',            icon: <SubArrowIcon />, indent: 1 },
-  { label: 'Ring Groups',              indent: 2 },
-  { label: 'Routing Rules',            indent: 2 },
+  { label: 'Phone Numbers',            icon: <SubArrowIcon />, indent: 1, expandable: true,
+    children: [
+      { label: 'Ring Groups' },
+      { label: 'Routing Rules' },
+    ],
+  },
   { label: 'Access Management',        icon: <DoorIcon /> },
   { label: 'Coverage Management',      icon: <ShieldIcon /> },
   { label: 'Document Management',      icon: <DocIcon /> },
@@ -515,7 +521,15 @@ const SidebarFooter = ({ userName, userEmail, collapsed }: { userName: string; u
 // ─── Settings sub-nav ──────────────────────────────────────────────────────────
 
 const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: boolean }) => {
-  const [activeItem, setActiveItem] = useState('Phone Numbers')
+  const [activeItem, setActiveItem] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+
+  const toggle = (label: string) => setExpanded(prev => {
+    const next = new Set(prev)
+    next.has(label) ? next.delete(label) : next.add(label)
+    return next
+  })
+
   return (
     <>
       {/* Back button */}
@@ -525,7 +539,7 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
           style={{
             display: 'flex', alignItems: 'center', gap: 4,
             padding: '4px 10px', borderRadius: 8,
-            border: '1px solid #cbd2e1',
+            border: '1px solid var(--ds-color-border)',
             background: 'transparent',
             cursor: 'pointer',
             fontSize: 12, fontWeight: 500,
@@ -546,25 +560,51 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
       )}
 
       {/* Sub-nav items */}
-      <nav style={{ flex: 1, padding: '0 8px 12px', display: 'flex', flexDirection: 'column', gap: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+      <nav style={{ flex: 1, padding: '0 8px 12px', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden' }}>
         {SETTINGS_ITEMS.map((item) => {
           const active = activeItem === item.label
-          const paddingLeft = item.indent === 2 ? 44 : item.indent === 1 ? 18 : 12
+          const isExpanded = expanded.has(item.label)
+          const paddingLeft = item.indent === 1 ? 18 : 12
+
           return (
-            <button
-              key={item.label}
-              onClick={() => setActiveItem(item.label)}
-              title={collapsed ? item.label : undefined}
-              style={{
-                ...navItemStyle(active),
-                padding: `10px 12px 10px ${paddingLeft}px`,
-                gap: item.indent === 1 ? 6 : 12,
-              }}
-            >
-              {item.icon && <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>}
-              {!item.icon && !collapsed && <span style={{ width: 16, flexShrink: 0 }} />}
-              {!collapsed && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
-            </button>
+            <React.Fragment key={item.label}>
+              <button
+                onClick={() => {
+                  if (item.expandable) toggle(item.label)
+                  else setActiveItem(item.label)
+                }}
+                title={collapsed ? item.label : undefined}
+                style={{
+                  ...navItemStyle(active),
+                  padding: `10px 12px 10px ${paddingLeft}px`,
+                  gap: item.indent === 1 ? 6 : 12,
+                }}
+              >
+                {item.icon && <span style={{ flexShrink: 0, display: 'flex' }}>{item.icon}</span>}
+                {!item.icon && !collapsed && <span style={{ width: 16, flexShrink: 0 }} />}
+                {!collapsed && <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
+                {!collapsed && item.expandable && (
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease', color: 'var(--ds-color-text-muted)' }}>
+                    <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+
+              {/* Children — only shown when expanded */}
+              {item.expandable && isExpanded && item.children?.map(child => (
+                <button
+                  key={child.label}
+                  onClick={() => setActiveItem(child.label)}
+                  title={collapsed ? child.label : undefined}
+                  style={{
+                    ...navItemStyle(activeItem === child.label),
+                    padding: '10px 12px 10px 44px',
+                  }}
+                >
+                  {!collapsed && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{child.label}</span>}
+                </button>
+              ))}
+            </React.Fragment>
           )
         })}
       </nav>
@@ -599,7 +639,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         style={{
           position: 'absolute',
-          right: -12, top: 9,
+          right: -12, top: 22,
           width: 24, height: 24,
           borderRadius: '50%',
           background: 'var(--ds-color-surface)',
@@ -611,8 +651,8 @@ export const Sidebar: React.FC<AppNavProps> = ({
           boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
         }}
       >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
-          <path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
+          <path d="M9 2L5 7l4 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </button>
 
