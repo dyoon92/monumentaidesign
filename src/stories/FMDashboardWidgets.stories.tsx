@@ -8,6 +8,7 @@ import {
   DelinquenciesPanel,
   GoogleReviewsPanel,
   PromotionsPanel,
+  MetricSparkPopover,
 } from './FMDashboardWidgets'
 
 const meta: Meta = {
@@ -19,8 +20,23 @@ const meta: Meta = {
 export default meta
 
 export const KPIRow: StoryObj = {
-  name: 'KPI Row',
-  render: () => <div style={{ minWidth: 900 }}><FMKPIRow /></div>,
+  name: 'KPI Row (hover for analytics)',
+  render: () => <div style={{ minWidth: 900, paddingBottom: 200 }}><FMKPIRow /></div>,
+}
+
+export const SparkPopoverOccupancy: StoryObj = {
+  name: 'Metric Spark Popover – Occupancy',
+  render: () => <div style={{ width: 268 }}><MetricSparkPopover label="Occupancy Rate" /></div>,
+}
+
+export const SparkPopoverRevenue: StoryObj = {
+  name: 'Metric Spark Popover – Revenue',
+  render: () => <div style={{ width: 268 }}><MetricSparkPopover label="Revenue" /></div>,
+}
+
+export const SparkPopoverLeads: StoryObj = {
+  name: 'Metric Spark Popover – Leads',
+  render: () => <div style={{ width: 268 }}><MetricSparkPopover label="Leads" /></div>,
 }
 
 export const PriorityTasks: StoryObj = {

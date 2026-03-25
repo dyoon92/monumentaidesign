@@ -1,6 +1,163 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { cardStyle } from './DashboardWidgets'
 import { UnitBadge } from './Badge'
+
+// ─── Popover animation injection ──────────────────────────────────────────────
+
+let _fmAnimInjected = false
+function useFMAnimStyles() {
+  useEffect(() => {
+    if (_fmAnimInjected) return
+    _fmAnimInjected = true
+    const el = document.createElement('style')
+    el.textContent = `
+      @keyframes ds-popoverIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+    `
+    document.head.appendChild(el)
+  }, [])
+}
+
+// ─── Metric sparkline data (30 days ending Mar 25 2026) ───────────────────────
+
+const SPARK_DAYS = Array.from({ length: 30 }, (_, i) => {
+  const d = new Date(2026, 2, 25)
+  d.setDate(d.getDate() - (29 - i))
+  return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`
+})
+
+interface MetricSeries { values: number[]; fmt: (v: number) => string }
+
+const METRIC_SERIES: Record<string, MetricSeries> = {
+  'Occupancy Rate': {
+    values: [86,87,85,88,87,89,88,86,87,90,88,87,86,89,88,87,88,90,89,88,87,89,88,87,88,89,87,88,90,89],
+    fmt: v => `${v}%`,
+  },
+  'Revenue': {
+    values: [13.2,13.5,13.1,13.8,13.6,14.0,13.8,13.5,13.7,14.2,13.9,13.7,13.5,14.0,13.8,13.7,13.9,14.2,14.0,13.9,13.7,14.0,13.9,13.7,13.9,14.0,13.8,13.9,14.1,14.2],
+    fmt: v => `$${v}k`,
+  },
+  'Net Move-Ins': {
+    values: [22,24,20,26,25,28,27,23,25,31,28,26,24,29,27,25,27,31,29,28,25,28,27,25,27,29,25,27,29,30],
+    fmt: v => `+${v}`,
+  },
+  'Leads': {
+    values: [510,520,498,532,525,545,538,515,528,562,540,530,515,548,535,525,535,558,548,540,525,542,535,525,538,545,530,538,544,546],
+    fmt: v => `${v}`,
+  },
+  'Lead Conversion': {
+    values: [11.2,11.5,10.8,11.8,11.6,12.1,11.9,11.3,11.6,12.4,12.0,11.7,11.3,12.0,11.7,11.5,11.7,12.2,12.0,11.8,11.5,11.8,11.7,11.5,11.7,12.0,11.6,11.8,12.0,12.0],
+    fmt: v => `${v}%`,
+  },
+}
+
+// Smooth cubic-bezier line path
+function sparkLine(pts: { x: number; y: number }[]) {
+  if (pts.length < 2) return ''
+  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`
+  for (let i = 1; i < pts.length; i++) {
+    const cpx = ((pts[i - 1].x + pts[i].x) / 2).toFixed(1)
+    d += ` C ${cpx} ${pts[i-1].y.toFixed(1)} ${cpx} ${pts[i].y.toFixed(1)} ${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)}`
+  }
+  return d
+}
+
+// ─── Metric Spark Popover ─────────────────────────────────────────────────────
+
+export const MetricSparkPopover = ({ label }: { label: string }) => {
+  const series = METRIC_SERIES[label]
+  if (!series) return null
+  const [hovIdx, setHovIdx] = useState<number | null>(null)
+
+  const W = 240, CH = 68
+  const pl = 4, pr = 4, pt = 8, pb = 4
+  const cw = W - pl - pr
+  const ch = CH - pt - pb
+  const vals = series.values
+  const minV = Math.min(...vals), maxV = Math.max(...vals)
+  const range = maxV - minV || 1
+
+  const pts = vals.map((v, i) => ({
+    x: pl + (i / (vals.length - 1)) * cw,
+    y: pt + (1 - (v - minV) / range) * ch,
+  }))
+  const linePath = sparkLine(pts)
+  const areaPath = linePath + ` L ${pts[pts.length-1].x} ${CH} L ${pts[0].x} ${CH} Z`
+
+  const gid = `spk-${label.replace(/\W/g, '')}`
+  const hPt = hovIdx !== null ? pts[hovIdx] : null
+  const tooltipY = hPt ? Math.max(hPt.y - 26, 2) : 0
+
+  return (
+    <div style={{
+      background: 'var(--ds-color-surface)',
+      border: '1px solid var(--ds-color-border)',
+      borderRadius: 12,
+      padding: '12px 14px 10px',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+      animation: 'ds-popoverIn 0.15s ease-out',
+      fontFamily: 'Inter, sans-serif',
+    }}>
+      {/* Header row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--ds-color-text-muted)', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          Last 30 days
+        </span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ds-color-text-primary)', minWidth: 40, textAlign: 'right' }}>
+          {hovIdx !== null ? series.fmt(vals[hovIdx]) : ''}
+        </span>
+      </div>
+
+      {/* SVG chart */}
+      <svg
+        width={W} height={CH}
+        style={{ display: 'block', cursor: 'crosshair', overflow: 'visible' }}
+        onMouseMove={e => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const x = e.clientX - rect.left
+          const step = cw / (vals.length - 1)
+          setHovIdx(Math.max(0, Math.min(vals.length - 1, Math.round((x - pl) / step))))
+        }}
+        onMouseLeave={() => setHovIdx(null)}
+      >
+        <defs>
+          <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7d52f7" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#7d52f7" stopOpacity="0.02" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill={`url(#${gid})`} />
+        <path d={linePath} fill="none" stroke="#7d52f7" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        {hPt && (
+          <>
+            <line x1={hPt.x} y1={pt} x2={hPt.x} y2={CH} stroke="var(--ds-color-border)" strokeWidth="1" strokeDasharray="3 2" />
+            <circle cx={hPt.x} cy={hPt.y} r={6} fill="#7d52f7" fillOpacity={0.15} />
+            <circle cx={hPt.x} cy={hPt.y} r={3.5} fill="#7d52f7" />
+            {/* Tooltip bubble */}
+            <rect x={hPt.x - 22} y={tooltipY} width={44} height={18} rx={4} fill="var(--ds-color-text-primary)" />
+            <text x={hPt.x} y={tooltipY + 12.5} textAnchor="middle" fontSize={10} fontWeight={600} fill="var(--ds-color-surface)" fontFamily="Inter, sans-serif">
+              {series.fmt(vals[hovIdx!])}
+            </text>
+          </>
+        )}
+      </svg>
+
+      {/* Date axis */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+        {[0, 14, 29].map(i => (
+          <span key={i} style={{ fontSize: 10, color: 'var(--ds-color-text-muted)' }}>{SPARK_DAYS[i]}</span>
+        ))}
+      </div>
+      {hovIdx !== null && (
+        <div style={{ textAlign: 'center', fontSize: 10, color: 'var(--ds-color-text-muted)', marginTop: 2 }}>
+          {SPARK_DAYS[hovIdx]}
+        </div>
+      )}
+    </div>
+  )
+}
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -112,19 +269,41 @@ const TrendUp = ({ color = '#08875D' }: { color?: string }) => (
   </svg>
 )
 
-const KPICard = ({ label, value, trend, trendUp = true }: { label: string; value: string; trend: string; trendUp?: boolean }) => (
-  <div style={{ ...cardStyle, flex: 1, minWidth: 0, gap: 8, padding: '16px 20px' }}>
-    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ds-color-text-primary)', fontFamily: 'Inter, sans-serif' }}>{label}</span>
-    <div>
-      <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: -0.5, color: 'var(--ds-color-text-primary)', lineHeight: '28px', fontFamily: 'Inter, sans-serif', marginBottom: 4 }}>{value}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <TrendUp color={trendUp ? '#08875D' : '#E12C3C'} />
-        <span style={{ fontSize: 12, fontWeight: 600, color: trendUp ? '#08875D' : '#E12C3C', fontFamily: 'Inter, sans-serif' }}>{trend}</span>
-        <span style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', fontFamily: 'Inter, sans-serif' }}>From last period</span>
+const KPICard = ({ label, value, trend, trendUp = true }: { label: string; value: string; trend: string; trendUp?: boolean }) => {
+  useFMAnimStyles()
+  const [open, setOpen] = useState(false)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const show = () => { if (timer.current) clearTimeout(timer.current); setOpen(true) }
+  const hide = () => { timer.current = setTimeout(() => setOpen(false), 160) }
+
+  return (
+    <div
+      style={{ ...cardStyle, flex: 1, minWidth: 0, gap: 8, padding: '16px 20px', position: 'relative', cursor: 'default' }}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+    >
+      <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ds-color-text-primary)', fontFamily: 'Inter, sans-serif' }}>{label}</span>
+      <div>
+        <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: -0.5, color: 'var(--ds-color-text-primary)', lineHeight: '28px', fontFamily: 'Inter, sans-serif', marginBottom: 4 }}>{value}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <TrendUp color={trendUp ? '#08875D' : '#E12C3C'} />
+          <span style={{ fontSize: 12, fontWeight: 600, color: trendUp ? '#08875D' : '#E12C3C', fontFamily: 'Inter, sans-serif' }}>{trend}</span>
+          <span style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', fontFamily: 'Inter, sans-serif' }}>From last period</span>
+        </div>
       </div>
+      {open && (
+        <div
+          style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 200, minWidth: 268 }}
+          onMouseEnter={show}
+          onMouseLeave={hide}
+        >
+          <MetricSparkPopover label={label} />
+        </div>
+      )}
     </div>
-  </div>
-)
+  )
+}
 
 export const FMKPIRow = () => (
   <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
