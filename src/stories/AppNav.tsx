@@ -469,7 +469,7 @@ const navItemStyle = (active: boolean): React.CSSProperties => ({
   borderRadius: 8,
   border: 'none',
   background: active ? 'var(--ds-color-primary-light)' : 'transparent',
-  color: active ? 'var(--ds-color-primary)' : 'var(--ds-color-text-muted)',
+  color: active ? 'var(--ds-color-primary)' : 'color-mix(in srgb, var(--ds-color-text-primary) 80%, transparent)',
   fontSize: 14,
   fontWeight: active ? 600 : 400,
   cursor: 'pointer',
