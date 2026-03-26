@@ -9,17 +9,17 @@
  * Built using real design system components — no custom colors, no one-off styles.
  */
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { TenantPageHeader } from '../TenantPageHeader'
 import { PaymentBanner } from '../PaymentBanner'
 
-const renewalData = {
-  currentLease: { label: 'Current lease end', value: 'Jun 30, 2025' },
-  monthlyRent: { label: 'Current monthly rent', value: '$1,450 / mo' },
-  newRate: { label: 'Proposed new rate', value: '$1,520 / mo' },
-  newTerm: { label: 'New lease term', value: 'Jul 1, 2025 – Jun 30, 2026' },
-  increase: '+$70 / mo (4.8%)',
-}
+const renewalData: { label: string; value: string }[] = [
+  { label: 'Current lease end', value: 'Jun 30, 2025' },
+  { label: 'Current monthly rent', value: '$1,450 / mo' },
+  { label: 'Proposed new rate', value: '$1,520 / mo' },
+  { label: 'New lease term', value: 'Jul 1, 2025 – Jun 30, 2026' },
+]
+const renewalIncrease = '+$70 / mo (4.8%)'
 
 function RenewalTab() {
   const [decision, setDecision] = useState<'accepted' | 'declined' | null>(null)
@@ -105,7 +105,7 @@ function RenewalTab() {
 
         {/* Lease terms grid */}
         <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          {Object.values(renewalData).slice(0, 4).map((item) => (
+          {renewalData.map((item) => (
             <div key={item.label}>
               <div style={{ fontSize: 12, color: 'var(--ds-color-text-muted)', marginBottom: 4 }}>
                 {item.label}
@@ -131,7 +131,7 @@ function RenewalTab() {
             Rate increase
           </span>
           <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-color-primary)' }}>
-            {renewalData.increase}
+            {renewalIncrease}
           </span>
         </div>
 

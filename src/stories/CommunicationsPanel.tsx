@@ -1,6 +1,7 @@
 import React from 'react'
 import { PinnedNotes } from './PinnedNotes'
 import { Button } from './Button'
+import type { PinnedNote } from './PinnedNotes'
 export type { PinnedNote } from './PinnedNotes'
 
 const LockIcon = () => (

@@ -48,7 +48,6 @@ import { CallCenterPage } from './stories/prototypes/CallCenterPage'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type View = 'tenants' | 'tenant-detail' | 'renewal'
 type ActiveTab = 'overview' | 'billing' | 'documents' | 'access' | 'renewal'
 
 interface TenantRecord {
@@ -218,7 +217,7 @@ function TenantDetail({ tenant, onBack }: { tenant: TenantRecord; onBack: () => 
             }}>
               <UnitDetailsCard
                 unitNumber={tenant.unit}
-                status={tenant.unitStatus}
+                status={tenant.unitStatus === 'normal' ? 'good-standing' : tenant.unitStatus}
                 moveInDate={tenant.moveInDate}
               />
               <TenantInfoCard

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Badge } from './Badge'
 
 // TenantStatsWidget — illustrative component, no Figma node
 // Built using established design tokens + Badge primitive

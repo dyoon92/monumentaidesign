@@ -71,11 +71,6 @@ const DelinquenciesIcon = () => (
   </svg>
 )
 
-const RevenueIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M2 12L6 8l3 3 5-6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-)
 
 const InsightsIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
