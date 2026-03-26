@@ -44,6 +44,7 @@ import { CommunicationsPanel } from './stories/CommunicationsPanel'
 import { UnitDetailsCard } from './stories/UnitDetailsCard'
 import { Navbar, Sidebar } from './stories/AppNav'
 import type { NavId } from './stories/AppNav'
+import { CallCenterPage } from './stories/prototypes/CallCenterPage'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -390,6 +391,7 @@ function TenantsView({ onSelectTenant }: { onSelectTenant: (id: string) => void 
 export default function App() {
   const [nav, setNav] = useState<NavId>('dashboard')
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null)
+  const [settingsPage, setSettingsPage] = useState<string | null>(null)
   const [darkMode, setDarkMode] = useState(false)
   const width = useWindowWidth()
   const isMobile = width < 768
@@ -399,6 +401,7 @@ export default function App() {
   const handleNav = (id: NavId) => {
     setNav(id)
     setSelectedTenantId(null)
+    setSettingsPage(null)
   }
 
   return (
@@ -409,11 +412,13 @@ export default function App() {
       {/* Below navbar: sidebar + content — fills remaining height */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         {!isMobile && (
-          <Sidebar activeNav={nav} onNav={handleNav} userName="Dave Yoon" userEmail="dave@monumentai.com" />
+          <Sidebar activeNav={nav} onNav={handleNav} onSettingsItemSelect={setSettingsPage} userName="Dave Yoon" userEmail="dave@monumentai.com" />
         )}
 
         <main style={{ flex: 1, minWidth: 0, background: 'var(--ds-color-page-bg)', overflowY: 'auto' }}>
-          {selectedTenant ? (
+          {settingsPage === 'Phone Numbers' ? (
+            <CallCenterPage />
+          ) : selectedTenant ? (
             <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenantId(null)} />
           ) : nav === 'tenants' ? (
             <div style={{ padding: '20px 20px 24px' }}>

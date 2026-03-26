@@ -125,12 +125,6 @@ const ChevronLeftSmallIcon = () => (
   </svg>
 )
 
-const SubArrowIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: 0.6 }}>
-    <path d="M3 3v5a2 2 0 002 2h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M9 8l2 2-2 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-)
 
 const UsersIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -255,6 +249,7 @@ export type NavId = 'dashboard' | 'units' | 'tenants' | 'leads' | 'communication
 export interface AppNavProps {
   activeNav?: NavId
   onNav?: (id: NavId) => void
+  onSettingsItemSelect?: (label: string) => void
   facilityName?: string
   userName?: string
   userEmail?: string
@@ -284,9 +279,9 @@ const SETTINGS_ITEMS: SettingsItem[] = [
   { label: 'Portfolio Configurations', icon: <SlidersIcon /> },
   { label: 'Users & Permissions',      icon: <UsersIcon /> },
   { label: 'Facility Management',      icon: <BuildingIcon /> },
-  { label: 'Call Center Setup',        icon: <CallsIcon /> },
-  { label: 'Phone Numbers',            icon: <SubArrowIcon />, indent: 1, expandable: true,
+  { label: 'Call Center Setup',        icon: <CallsIcon />, expandable: true,
     children: [
+      { label: 'Phone Numbers' },
       { label: 'Ring Groups' },
       { label: 'Routing Rules' },
     ],
@@ -553,7 +548,7 @@ const SidebarFooter = ({ userName, userEmail, collapsed }: { userName: string; u
 
 // ─── Settings sub-nav ──────────────────────────────────────────────────────────
 
-const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: boolean }) => {
+const SettingsSubNav = ({ onBack, collapsed, onSelect }: { onBack: () => void; collapsed: boolean; onSelect?: (label: string) => void }) => {
   const [activeItem, setActiveItem] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
 
@@ -603,7 +598,7 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
             <React.Fragment key={item.label}>
               <NavButton
                 active={active}
-                onClick={() => { if (item.expandable) toggle(item.label); else setActiveItem(item.label) }}
+                onClick={() => { if (item.expandable) toggle(item.label); else { setActiveItem(item.label); onSelect?.(item.label) } }}
                 title={collapsed ? item.label : undefined}
                 style={{ padding: `10px 12px 10px ${paddingLeft}px`, gap: item.indent === 1 ? 6 : 12 }}
               >
@@ -622,7 +617,7 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
                 <NavButton
                   key={child.label}
                   active={activeItem === child.label}
-                  onClick={() => setActiveItem(child.label)}
+                  onClick={() => { setActiveItem(child.label); onSelect?.(child.label) }}
                   title={collapsed ? child.label : undefined}
                   style={{ padding: '10px 12px 10px 44px' }}
                 >
@@ -642,6 +637,7 @@ const SettingsSubNav = ({ onBack, collapsed }: { onBack: () => void; collapsed: 
 export const Sidebar: React.FC<AppNavProps> = ({
   activeNav = 'tenants',
   onNav,
+  onSettingsItemSelect,
   userName = 'Dave Yoon',
   userEmail = 'dave@monumentai.com',
 }) => {
@@ -690,7 +686,7 @@ export const Sidebar: React.FC<AppNavProps> = ({
         display: 'flex', flexDirection: 'column',
       }}>
         {showSettings ? (
-          <SettingsSubNav onBack={() => setShowSettings(false)} collapsed={collapsed} />
+          <SettingsSubNav onBack={() => setShowSettings(false)} collapsed={collapsed} onSelect={onSettingsItemSelect} />
         ) : (
           <>
             {/* Main nav */}
